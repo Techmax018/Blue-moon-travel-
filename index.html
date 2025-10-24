@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlueMoonJourneys</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="BlueMoonJourneys Logo" class="logo-image">
+        </div>
+        <div class="hamburger-menu" id="hamburger-menu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <nav class="navbar" id="navbar">
+            <a href="#home" class="nav-link">Home</a>
+            <a href="#about" class="nav-link">About</a>
+            <a href="#services" class="nav-link">Services</a>
+            <a href="#destinations" class="nav-link">Destinations</a>
+            <a href="#gallery" class="nav-link">Gallery</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero-video-section">
+            <video autoplay muted loop id="myVideo">
+                <source src="introBG.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="video-overlay"></div>
+            <div class="hero-content">
+                <h1 class="animate-on-scroll">Welcome to BlueMoonJourneys</h1>
+                <p class="animate-on-scroll">Your adventure starts here!</p>
+                <div class="hero-buttons animate-on-scroll">
+                    <a href="#about" class="btn btn-primary">Discover Our Journeys</a>
+                    <a href="booking.html" class="btn btn-secondary">Reserve Your Place Today!</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about">
+            <h2 class="animate-on-scroll">About Us</h2>
+            <p class="animate-on-scroll">We are dedicated to providing unforgettable travel experiences.</p>
+            <p class="animate-on-scroll">At BlueMoonJourneys, we believe that every trip should be as unique as you are. Our passion is to craft personalized adventures that lead you to discover the world's most breathtaking landscapes and immerse yourself in diverse cultures. Let us turn your travel dreams into reality.</p>
+        </section>
+
+        <section id="services">
+            <h2 class="animate-on-scroll">Our Services</h2>
+            <ul class="services-list">
+                <li class="animate-on-scroll">Custom Travel Planning</li>
+                <li class="animate-on-scroll">Group Tours & Expeditions</li>
+                <li class="animate-on-scroll">Adventure & Wilderness Packages</li>
+                <li class="animate-on-scroll">Luxury & Honeymoon Escapes</li>
+                <li class="animate-on-scroll">Eco-Friendly & Sustainable Tours</li>
+            </ul>
+        </section>
+
+        <section class="destinations" id="destinations">
+            <h2 class="animate-on-scroll">Explore Our Destinations</h2>
+            <div class="destination-grid">
+                <div class="destination-item animate-on-scroll">
+                    <img src="/destinations/Majestic Mountains.jpg" alt="Majestic Mountains">
+                    <div class="destination-info">
+                        <h3>Majestic Mountains</h3>
+                        <p>Experience the breathtaking beauty of towering peaks and serene valleys. Clean air and stunning vistas await you in our majestic mountain destinations. Have a chance to hike, ski, or simply relax in nature's embrace and enjoy a ride with cable car.</p>
+                        <button class="btn btn-secondary" onclick="location.href='booking.html'">Reserve your place</button>
+                    </div>
+                </div>
+                <div class="destination-item animate-on-scroll">
+                    <img src="/destinations/Serene Beaches.jpg" alt="Serene Beaches">
+                    <div class="destination-info">
+                        <h3>Serene Beaches</h3>
+                        <p>Relax on pristine shores with crystal-clear waters and golden sands. Unwind in paradise with our selection of serene beach destinations. From sunbathing to water sports, these beaches offer the perfect escape for relaxation and adventure. Enjoy the sound of waves and the warmth of the sun as you create unforgettable memories.</p>
+                        <button class="btn btn-secondary" onclick="location.href='booking.html'" >Reserve your place</button>
+                    </div>
+                </div>
+                <div class="destination-item animate-on-scroll">
+                    <img src="/destinations/Vibrant Cities.jpg" alt="Vibrant Cities">
+                    <div class="destination-info">
+                        <h3>Vibrant Cities</h3>
+                        <p>Discover the pulse of urban life with rich culture and modern attractions. Immerse yourself in the vibrant energy of our featured cities. From iconic landmarks to hidden gems, these urban destinations offer a blend of history, art, and entertainment. Explore bustling markets, dine at world-class restaurants, and experience the nightlife that never sleeps.</p>
+                        <button class="btn btn-secondary">Reserve your place</button>
+                    </div>
+                </div>
+                <div class="destination-item animate-on-scroll">
+                    <img src="/destinations/Cultural Heritage.jpg" alt="Cultural Heritage">
+                    <div class="destination-info">
+                        <h3>Cultural Heritage</h3>
+                        <p>Delve into the rich history and traditions of diverse cultures.<br>
+                                        Explore ancient ruins, museums, and cultural landmarks that tell the stories of our world's heritage.<br>
+                                        From traditional festivals to local cuisine, these destinations offer a deep connection to the past and present.<br>
+                                            Experience the warmth of local hospitality and learn about the customs that shape each culture.</p>
+                        <button class="btn btn-secondary" onclick="location.href='booking.html'">Reserve your place</button>
+                    </div>
+                </div>
+                <div class="destination-item animate-on-scroll">
+                    <img src="/destinations/China's Great Wall.jpg" alt="China's Great Wall">
+                    <div class="destination-info">
+                        <h3>China's Great Wall</h3>
+                        <p>Walk along the iconic Great Wall of China, a marvel of ancient engineering. Experience the grandeur of this UNESCO World Heritage site as you traverse its historic paths. From breathtaking views to fascinating stories, the Great Wall offers a glimpse into China's rich history and culture. Whether you hike, bike, or simply take in the scenery, this destination is a must-visit for any traveler.</p>
+                        <button class="btn btn-secondary" onclick="location.href='booking.html'">Reserve your place</button>
+                    </div>
+                </div>
+                <div class="destination-item animate-on-scroll">
+                    <img src="/destinations/Historical Landmarks.jpg" alt="Historical Landmarks">
+                    <div class="destination-info">
+                        <h3>Historical Landmarks</h3>
+                        <p>Visit iconic landmarks that have shaped our world's history. From ancient temples to modern monuments, these sites offer a glimpse into the past and present. Explore the stories behind each landmark and appreciate the artistry and significance of these cultural treasures. Whether you're an architecture enthusiast or a history buff, these destinations will leave you in awe.</p>
+                        <button class="btn btn-secondary" onclick="location.href='booking.html'">Reserve your place</button>
+                    </div>
+                </div>
+                <div class="destination-item animate-on-scroll">
+                    <img src="/destinations/Adventure Trails.jpg" alt="Adventure Trails">
+                    <div class="destination-info">
+                        <h3>Adventure Trails</h3>
+                        <p>Embark on thrilling adventures through rugged terrains and scenic trails. From hiking to biking, these adventure trails offer a perfect blend of excitement and natural beauty. Challenge yourself with outdoor activities that take you off the beaten path and into the heart of nature. Whether you're a seasoned adventurer or a casual explorer, these trails promise unforgettable experiences.</p>
+                        <button class="btn btn-secondary" onclick="location.href='booking.html'">Reserve your place</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="gallery" id="gallery">
+            <h2 class="animate-on-scroll">Gallery</h2>
+            <div class="gallery-grid">
+                <img src="/gallery/image1.jpg" alt="Beautiful Landscape 1" class="animate-on-scroll">
+                <img src="/gallery/image 2.png" alt="Beautiful Landscape 2" class="animate-on-scroll">
+                <img src="/gallery/image 3.jpg" alt="Beautiful Landscape 3" class="animate-on-scroll">
+                <img src="/gallery/image4.jpg" alt="Beautiful Landscape 4" class="animate-on-scroll">
+                <img src="/gallery/image5.jpg" alt="Beautiful Landscape 5" class="animate-on-scroll">
+                <img src="/gallery/image 6.jpg" alt="Beautiful Landscape 6" class="animate-on-scroll">
+                <img src="/gallery/image 7.jpg" alt="Beautiful Landscape 7" class="animate-on-scroll">
+                <img src="/gallery/image 8.jpg" alt="Beautiful Landscape 8" class="animate-on-scroll">
+            </div>
+        </section>
+
+        <section id="testimonials">
+            <h2 class="animate-on-scroll">What Our Clients Say</h2>
+            <div class="testimonials-carousel-container">
+                <div class="testimonial-item active" data-slide="0">
+                    <p>
+                        <span class="animate-on-scroll">"BlueMoonJourneys made our honeymoon unforgettable! Every detail was perfect and the memories will last a lifetime."</span>
+                    </p>
+                    <p class="author animate-on-scroll">- Sarah & John, Kenya</p>
+                </div>
+                <div class="testimonial-item" data-slide="1">
+                    <p>
+                        <span class="animate-on-scroll">"An amazing adventure! The team at BlueMoonJourneys really knows how to create unique experiences tailored to your wildest dreams."</span>
+                    </p>
+                    <p class="author animate-on-scroll">- Emily R., USA</p>
+                </div>
+                <div class="testimonial-item" data-slide="2">
+                    <p>
+                        <span class="animate-on-scroll">"From pristine beaches to bustling cityscapes, BlueMoonJourneys handles it all with impeccable service. Highly recommend!"</span>
+                    </p>
+                    <p class="author animate-on-scroll">- David K., UK</p>
+                </div>
+                <div class="testimonial-item" data-slide="3">
+                    <p>
+                        <span class="animate-on-scroll">"Truly a once-in-a-blue-moon experience! Their attention to detail and local insights made all the difference."</span>
+                    </p>
+                    <p class="author animate-on-scroll">- Aisha S., UAE</p>
+                </div>
+                <div class="testimonial-item" data-slide="4">
+                    <p>
+                        <span class="animate-on-scroll">"We had the trip of a lifetime! The guides were knowledgeable and friendly, making every moment special."</span>
+                    </p>
+                    <p class="author animate-on-scroll">- Grace G., Kenya</p>
+                </div>
+                <div class="testimonial-item" data-slide="5">
+                    <p>
+                        <span class="animate-on-scroll">"BlueMoonJourneys exceeded our expectations! Their personalized approach made our family vacation unforgettable."</span>
+                    </p>
+                    <p class="author animate-on-scroll">- Wa Kamau, Kenya</p>
+                    </div>
+            </div>
+            <div class="carousel-dots animate-on-scroll">
+                <span class="dot active" data-slide="0"></span>
+                <span class="dot" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
+                <span class="dot" data-slide="3"></span>
+                <span class="dot" data-slide="4"></span>
+                <span class="dot" data-slide="5"></span>
+            </div>
+        </section>
+
+
+        <section id="contact">
+            <h2 class="animate-on-scroll">Contact Us</h2>
+            <p class="animate-on-scroll">Email: <a href="mailto:info@bluemoonjourneys.com" class="contact-link">info@bluemoonjourneys.com</a></p>
+            <p class="animate-on-scroll">Phone: <a href="tel:+254 703 161 031" class="contact-link">+254 (703) 161-031</a></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy;| underworldtech | 2025 BlueMoonJourneys | All rights reserved.</p>
+    </footer>
+    <div class="chatbot-container">
+    <button id="chatbot-toggle-btn" class="chatbot-toggle-btn" title="Chat with us">
+        <img src="chatbot.png" alt="Chatbot Icon" class="bot-icon-img">
+    </button>
+    <div id="chatbot-window" class="chatbot-window hidden">
+        <div class="chatbot-header">
+            <h3>BlueMoonJourneys Assistant</h3>
+            <button id="chatbot-close-btn" class="chatbot-close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="chatbot-messages" class="chatbot-messages">
+            <div class="message bot-message">Hello! How can I help you today?</div>
+            </div>
+        <div class="chatbot-input-container">
+            <input type="text" id="chatbot-input" placeholder="Type your message...">
+            <button id="chatbot-mic-btn" class="mic-button">
+                <img src="microphone.png" alt="Microphone" class="button-icon-img">
+            </button>
+            <button id="chatbot-send-btn">
+                <img src="send.png" alt="Send Message" class="button-icon-img">
+            </button>
+        </div>
+    </div>
+</div>
+
+    <button id="scrollToTopBtn" title="Go to top">&#9650;</button>
+
+<script src="script.js"></script>
+<script src="scripts.js"></script>
+<script src="bot.js"></script>
+</body>
+</html>

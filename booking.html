@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlueMoonJourneys - Book Your Trip</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="booking.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+    <div class="container">
+        <img src="logo.png" alt="BlueMoonJourneys Logo" class="logo-img">
+        
+        <div class="hamburger-menu" id="hamburger-menu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <nav class="navbar" id="navbar">
+            <a href="index.html#hero-section" class="nav-link">Home</a>
+            <a href="#international-destinations" class="nav-link active">International Destinations</a>
+            <a href="#local-kenya-travel" class="nav-link">Local Kenya Travel</a>
+            <a href="index.html#about-us-section" class="nav-link">About Us</a>
+            <a href="index.html#contact-section" class="nav-link">Contact</a>
+        </nav>
+    </div>
+</header>
+    <main>
+        <section class="hero-search-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content container">
+                <h1>Find Your Next Adventure</h1>
+                <p>Explore breathtaking destinations and book your dream trip with ease.</p>
+                <button class="btn btn-primary" id="book-now-btn" onclick="showBookingForm() ">Book Now</button>
+            </div>
+        </section>
+
+        <section id="international-destinations" class="trip-listings">
+            <div class="container">
+                <h2>International Destinations</h2>
+                <div class="filter-sort-controls">
+                    <div class="filters">
+                        <h3>Filter by:</h3>
+                        <div class="filter-group">
+                            <h4>Trip Type</h4>
+                            <label><input type="checkbox" class="filter-type" value="Adventure"> Adventure</label>
+                            <label><input type="checkbox" class="filter-type" value="Cultural"> Cultural</label>
+                            <label><input type="checkbox" class="filter-type" value="Relaxation"> Relaxation</label>
+                            <label><input type="checkbox" class="filter-type" value="Family"> Family</label>
+                            <label><input type="checkbox" class="filter-type" value="Solo"> Solo</label>
+                            <label><input type="checkbox" class="filter-type" value="Luxury"> Luxury</label>
+                            <label><input type="checkbox" class="filter-type" value="Wildlife"> Wildlife</label>
+                        </div>
+                        <div class="filter-group">
+                            <h4>Price Range</h4>
+                            <input type="range" id="price-range" min="0" max="5000" value="5000">
+                            <span id="price-range-value">Up to $5000</span>
+                        </div>
+                        <div class="filter-group">
+                            <h4>Duration (Days)</h4>
+                            <input type="number" id="duration-min" placeholder="Min" min="1"> -
+                            <input type="number" id="duration-max" placeholder="Max" min="1">
+                        </div>
+                    </div>
+                    <div class="sorting">
+                        <h3>Sort by:</h3>
+                        <select id="sort-by">
+                            <option value="popularity">Popularity</option>
+                            <option value="price-asc">Price (Low to High)</option>
+                            <option value="price-desc">Price (High to Low)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="trip-grid" id="international-trip-grid">
+                    <p id="no-international-results" style="display: none;">No international trips found matching your criteria. Please adjust your search.</p>
+                </div>
+            </div>
+        </section>
+
+        ---
+
+        <section id="local-kenya-travel" class="trip-listings">
+            <div class="container">
+                <h2>Explore Kenya - Local Adventures</h2>
+                <div class="filter-sort-controls">
+                    <div class="filters">
+                        <h3>Filter by:</h3>
+                        <div class="filter-group">
+                            <h4>Kenya Trip Type</h4>
+                            <label><input type="checkbox" class="local-filter-type" value="Safari"> Safari</label>
+                            <label><input type="checkbox" class="local-filter-type" value="Beach"> Beach</label>
+                            <label><input type="checkbox" class="local-filter-type" value="Mountain"> Mountain</label>
+                            <label><input type="checkbox" class="local-filter-type" value="City Escape"> City Escape</label>
+                        </div>
+                        <div class="filter-group">
+                            <h4>Price Range (KES)</h4>
+                            <input type="range" id="local-price-range" min="0" max="150000" value="150000">
+                            <span id="local-price-range-value">Up to KES 150,000</span>
+                        </div>
+                        <div class="filter-group">
+                            <h4>Duration (Days)</h4>
+                            <input type="number" id="local-duration-min" placeholder="Min" min="1"> -
+                            <input type="number" id="local-duration-max" placeholder="Max" min="1">
+                        </div>
+                    </div>
+                    <div class="sorting">
+                        <h3>Sort by:</h3>
+                        <select id="local-sort-by">
+                            <option value="popularity">Popularity</option>
+                            <option value="price-asc">Price (Low to High)</option>
+                            <option value="price-desc">Price (High to Low)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="trip-grid" id="local-trip-grid">
+                    <p id="no-local-results" style="display: none;">No local trips found matching your criteria. Please adjust your search.</p>
+                </div>
+            </div>
+        </section>
+
+
+        ---
+        <section id="about-us-section" class="cta-newsletter">
+            <div class="container">
+                <h2>Don't Miss Out on Amazing Deals!</h2>
+                <p>Sign up for our newsletter to get exclusive offers and travel inspiration directly to your inbox.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your Email Address" required>
+                    <button type="submit" class="btn btn-secondary">Subscribe Now</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="contact-section" style="padding: 80px 0; background-color: var(--white);">
+            <div class="container">
+                <h2>Contact Us</h2>
+                <p>Have questions or need assistance? Reach out to us!</p>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-top: 40px;">
+                    <div style="flex: 1; min-width: 280px; max-width: 400px; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); text-align: left; background-color: var(--bg-light-grey);">
+                        <h3>Our Office</h3>
+                        <p><i class="fas fa-map-marker-alt" style="margin-right: 10px; color: var(--secondary-light-blue);"></i>123 Adventure Ave, Nairobi, Kenya</p>
+                        <p><i class="fas fa-phone" style="margin-right: 10px; color: var(--secondary-light-blue);"></i>+254 712 345 678</p>
+                        <p><i class="fas fa-envelope" style="margin-right: 10px; color: var(--secondary-light-blue);"></i>info@bluemoonjourneys.com</p>
+                    </div>
+                    <div style="flex: 1; min-width: 280px; max-width: 400px; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); text-align: left; background-color: var(--bg-light-grey);">
+                        <h3>Send Us a Message</h3>
+                        <form style="display: flex; flex-direction: column; gap: 15px;">
+                            <input type="text" placeholder="Your Name" style="padding: 12px; border: 1px solid var(--border-light); border-radius: 6px;">
+                            <input type="email" placeholder="Your Email" style="padding: 12px; border: 1px solid var(--border-light); border-radius: 6px;">
+                            <textarea placeholder="Your Message" rows="5" style="padding: 12px; border: 1px solid var(--border-light); border-radius: 6px; resize: vertical;"></textarea>
+                            <button type="submit" class="btn btn-primary" style="align-self: flex-start;">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="booking-prompt">
+            
+            <div class="container" style="display: none;">
+                <h2>Ready to Book Your Trip?</h2>
+                <p>fill out the form below to start your booking process.</p>
+                <form class="booking-form">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" placeholder="Enter your name" required>
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                        <label for="phone">Your Phone Number</label>
+                        <input type="tel" id="phone" placeholder="Enter your phone number" required>
+                        <label for="trip-type">Trip Type</label>
+                        <select id="trip-type" required>
+                            <option value="" disabled selected>Select trip type</option>
+                            <option value="adventure">Adventure</option>
+                            <option value="cultural">Cultural</option>
+                            <option value="relaxation">Relaxation</option>
+                            <option value="family">Family</option>
+                            <option value="solo">Solo</option>
+                            <option value="luxury">Luxury</option>
+                            <option value="wildlife">Wildlife</option>
+                        </select>
+                        <label for="destination">Preferred Destination</label>
+                        <select id="destination" required>
+                            <option value="" disabled selected>Select destination</option>
+                            <option value="paris">Paris</option>
+                            <option value="safari">Safari</option>
+                            <option value="beach">Beach</option>
+                            <option value="mountain">Mountain</option>
+                            <option value="city-escape">City Escape</option>
+                            <option value="safari">Safari</option>
+                            <option value="beach">Beach</option>
+                        </select>
+                        <label class="amount" inputmode="selected"></label>
+                        <label for="travel-dates">Preferred Travel Dates</label>    
+                        <calendar id="travel-dates" placeholder="Select travel dates" required></calendar>
+                        <label for="special-requests">Special Requests</label>
+                        <textarea id="special-requests" placeholder="Any special requests?"></textarea>
+                        <p>card information</p>
+                        <label for="card-number">Card Number</label>
+                        <input type="text" id="card-number" placeholder="Enter your card number" required>
+                        <label for="expiry-date">Expiry Date</label>
+                        <input type="text" id="expiry-date" placeholder="MM/YY" required>
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" placeholder="Enter your CVV" required>
+                        <button type="submit" class="btn btn-primary">Book Now</button>
+                    </div>
+                    </div>
+                    
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 underworldtech | Bluemoonjourneys. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-pinterest-p"></i></a>
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="booking.js"></script>
+</body>
+</html>
