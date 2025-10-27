@@ -118,11 +118,11 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 hideTypingIndicator();
 
-                let botResponse = "I'm a simple bot. How can I help you with BlueMoonJourneys?";
+                let botResponse = "I'm blue, a simple bot. How can I help you with BlueMoonJourneys?";
                 const lowerCaseMessage = userMessage.toLowerCase();
 
                 if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi')) {
-                    botResponse = "Hello there! How can I assist you with your travel plans today?";
+                    botResponse = "Hello there!Am blue, How can I assist you with your travel plans today?";
                 } else if (lowerCaseMessage.includes('booking') || lowerCaseMessage.includes('book')) {
                     botResponse = "You can book your trip on our 'Booking' page. Would you like a link to it?";
                 } else if (lowerCaseMessage.includes('destinations') || lowerCaseMessage.includes('where to go')) {
