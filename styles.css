@@ -43,7 +43,7 @@ h1, h2, h3 {
 
 h1 {
     font-size: 3em;
-    font-weight: 700;
+    font-weight: 650;
 }
 
 h2 {
@@ -61,7 +61,7 @@ h3 {
 section {
     padding: 80px 20px;
     text-align: center;
-    max-width:auto;
+    max-width:100%;
     margin: 0 auto;
 }
 
