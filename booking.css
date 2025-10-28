@@ -1,0 +1,772 @@
+:root {
+    --primary-dark-blue: #0F213A;
+    --secondary-light-blue: #6CCFF6;
+    --accent-yellow: #FFD166;
+    --text-dark: #333333;
+    --text-medium: #666666;
+    --text-light: #F0F0F0;
+    --bg-light-grey: #F8F8F8;
+    --bg-blue-soft: #E0F7FA;
+    --border-light: #EEEEEE;
+    --white: #FFFFFF;
+
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'Open Sans', sans-serif;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-body);
+    line-height: 1.7;
+    color: var(--text-dark);
+    background-color: var(--bg-light-grey);
+    scroll-behavior: smooth;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    text-decoration: none;
+    color: var(--secondary-light-blue);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-dark-blue);
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    color: var(--primary-dark-blue);
+    margin-top: 0;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 3.8em;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 2.8em;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+h3 {
+    font-size: 1.8em;
+    font-weight: 600;
+}
+
+h4 {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+section {
+    padding: 80px 0;
+    text-align: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 15px 35px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1em;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    text-align: center;
+    white-space: nowrap;
+}
+.hero-content h1{
+    margin-top: 70px;
+}
+.hero-content{
+    margin-bottom: 70px;
+}
+
+.btn-primary {
+    background-color: var(--secondary-light-blue);
+    color: var(--primary-dark-blue);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark-blue);
+    color: var(--white);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-secondary {
+    background-color: var(--primary-dark-blue);
+    color: var(--white);
+    border: 2px solid var(--primary-dark-blue);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-light-blue);
+    color: var(--primary-dark-blue);
+    transform: perspective(50px) scale(1.2) rotateX('40deg') ;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+header {
+    background-color: var(--primary-dark-blue);
+    color: var(--white);
+    padding: 15px 0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Updated logo styles - directly targeting img and span */
+.logo-img { /* Directly targeting the img now */
+    max-width: 60px;
+    height: auto;
+    display: block;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+    transform: scale(1.03);
+}
+
+.logo-text { /* Directly targeting the span now */
+    font-family: var(--font-heading);
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--white);
+    margin-left: 10px; /* Space between logo img and text */
+}
+
+.navbar {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap; /* Allows nav links to wrap on large screens if space is tight */
+}
+
+.navbar .nav-link {
+    color: var(--text-light);
+    font-weight: 600;
+    font-size: 1.05em;
+    padding: 8px 0;
+    position: relative;
+}
+
+.navbar .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    background-color: var(--secondary-light-blue);
+    left: 50%;
+    bottom: -5px;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.navbar .nav-link:hover::after,
+.navbar .nav-link.active::after {
+    width: 100%;
+    left: 0;
+}
+
+/* Hamburger menu styles - hidden by default */
+.hamburger-menu {
+    display: none; /* Hidden by default, shown in media query */
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    z-index: 1100; /* Above navbar for clickability */
+}
+
+.hamburger-menu .bar {
+    width: 100%;
+    height: 3px;
+    background-color: var(--white);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Animation for the hamburger icon to 'X' */
+.hamburger-menu.active .bar:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+}
+
+.hamburger-menu.active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.active .bar:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+}
+
+
+.hero-search-section {
+    position: relative;
+    height: 60vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--white);
+    background: url('booking/background.jpg') no-repeat center center/cover;
+    padding: 0;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    max-width: 900px;
+}
+
+.hero-content h1 {
+    font-size: 4.5em;
+    margin-bottom: 20px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.9);
+    color: var(--white);
+}
+
+.hero-content p {
+    font-size: 1.4em;
+    margin-bottom: 50px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    color: var(--text-light);
+}
+
+
+.search-form .btn-primary {
+    grid-column: 1 / -1;
+    margin-top: 10px;
+    padding: 15px 20px;
+    font-size: 1.2em;
+}
+
+.trip-listings {
+    background-color: var(--bg-light-grey);
+    padding: 80px 0;
+}
+
+.trip-listings h2 {
+    margin-bottom: 50px;
+}
+
+.filter-sort-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.filters, .sorting {
+    background-color: var(--white);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+.filters {
+    flex: 2;
+    min-width: 280px;
+}
+
+.sorting {
+    flex: 1;
+    min-width: 180px;
+}
+
+.filters h3, .sorting h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--primary-dark-blue);
+}
+
+.filter-group {
+    margin-bottom: 25px;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-medium);
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.filter-group input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.1);
+}
+
+.filter-group input[type="range"] {
+    width: 100%;
+    margin-top: 10px;
+}
+
+#price-range-value {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--primary-dark-blue);
+}
+
+.filter-group input[type="number"] {
+    width: calc(50% - 5px);
+    padding: 8px;
+    border: 1px solid var(--border-light);
+    border-radius: 5px;
+    font-size: 0.9em;
+    display: inline-block;
+}
+
+.sorting select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    font-size: 1em;
+    color: var(--text-dark);
+    background-color: var(--white);
+    cursor: pointer;
+}
+
+.trip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    justify-content: center;
+}
+
+.trip-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.trip-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.trip-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+}
+
+.trip-card-content {
+    padding: 25px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.trip-card h3 {
+    font-size: 1.6em;
+    margin-bottom: 10px;
+    color: var(--primary-dark-blue);
+}
+
+.trip-card .description {
+    font-size: 0.95em;
+    color: var(--text-medium);
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+.trip-card .highlights {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+    color: var(--text-dark);
+}
+
+.trip-card .highlights li {
+    margin-bottom: 5px;
+}
+
+.trip-card .price {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--secondary-light-blue);
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+
+.trip-card .btn {
+    width: 100%;
+    font-size: 1em;
+    padding: 12px 20px;
+}
+
+#no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 1.2em;
+    color: var(--text-medium);
+    padding: 50px;
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.cta-newsletter {
+    background-color: var(--bg-blue-soft);
+    padding: 60px 0;
+}
+
+.cta-newsletter h2 {
+    font-size: 2.2em;
+    margin-bottom: 20px;
+    color: var(--primary-dark-blue);
+}
+
+.cta-newsletter p {
+    font-size: 1.1em;
+    color: var(--text-medium);
+    max-width: 700px;
+    margin: 0 auto 30px auto;
+}
+
+.newsletter-form {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.newsletter-form input[type="email"] {
+    flex-grow: 1;
+    padding: 15px 20px;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    font-size: 1em;
+    color: var(--text-dark);
+}
+
+footer {
+    background-color: var(--primary-dark-blue);
+    color: var(--text-light);
+    text-align: center;
+    padding: 30px 0;
+    font-size: 0.95em;
+    border-top: 5px solid var(--secondary-light-blue);
+}
+
+footer .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.social-links {
+    margin-top: 10px;
+}
+
+.social-links a {
+    color: var(--white);
+    font-size: 1.5em;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--secondary-light-blue);
+}
+
+.footer-links {
+    margin-top: 10px;
+}
+
+.footer-links a {
+    color: var(--text-light);
+    margin: 0 15px;
+    font-weight: 400;
+}
+
+.footer-links a:hover {
+    color: var(--secondary-light-blue);
+}
+
+#scrollToTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 999;
+    border: none;
+    outline: none;
+    background-color: var(--primary-dark-blue);
+    color: var(--white);
+    cursor: pointer;
+    padding: 15px 20px;
+    border-radius: 50%;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#scrollToTopBtn:hover {
+    background-color: var(--secondary-light-blue);
+    transform: translateY(-3px);
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+    h1 {
+        font-size: 3.5em;
+    }
+    h2 {
+        font-size: 2.2em;
+    }
+    .hero-content p {
+        font-size: 1.2em;
+    }
+
+    .navbar {
+        gap: 15px;
+    }
+    .navbar .nav-link {
+        font-size: 1em;
+    }
+
+    .search-form {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        padding: 25px;
+    }
+
+    .filter-sort-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .filters, .sorting {
+        width: 100%;
+        max-width: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Header Container - now handling logo elements directly */
+    header .container {
+        display: flex; /* Still a flex container */
+        justify-content: space-between; /* Pushes logo and hamburger apart */
+        align-items: center;
+        flex-wrap: nowrap; /* CRUCIAL: Prevents logo and hamburger from wrapping */
+        padding: 15px 20px;
+    }
+
+    /* Direct logo element styling for mobile */
+    .logo-img {
+        max-width: 50px; /* Adjust size for mobile */
+        flex-shrink: 0; /* Prevents shrinking */
+    }
+
+    .logo-text {
+        font-size: 1.3em; /* Adjust size for mobile */
+        flex-shrink: 0; /* Prevents shrinking */
+        margin-left: 10px; /* Maintain spacing */
+    }
+
+    /* Styles for the navigation menu on small screens */
+    .navbar {
+        /* Hide navbar on larger mobile devices where it's still flex */
+        display: none; /* Hide by default on mobile */
+        position: absolute;
+        top: 100%; /* Positions it directly below the header */
+        left: 0;
+        width: 100%;
+        background-color: var(--primary-dark-blue);
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 20px 0;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        transform: translateY(-100%); /* Hidden state */
+        opacity: 0;
+        pointer-events: none; /* Prevents interaction when hidden */
+        z-index: 999; /* Below hamburger, above content */
+    }
+
+    .navbar.active {
+        display: flex; /* IMPORTANT: show as flex when active */
+        transform: translateY(0); /* Show the menu */
+        opacity: 1;
+        pointer-events: auto; /* Allow interaction */
+    }
+
+    /* Show the hamburger menu icon */
+    .hamburger-menu {
+        display: flex; /* Show hamburger icon on mobile */
+        flex-shrink: 0; /* Prevents hamburger from shrinking */
+    }
+
+    .navbar .nav-link {
+        font-size: 1em;
+        width: fit-content;
+    }
+    .navbar .nav-link::after {
+        bottom: -2px;
+    }
+
+    h1 {
+        font-size: 2.8em;
+    }
+    h2 {
+        font-size: 2em;
+        margin-bottom: 40px;
+    }
+    .hero-content p {
+        font-size: 1em;
+        margin-bottom: 30px;
+    }
+    .search-form {
+        grid-template-columns: 1fr;
+    }
+
+    section {
+        padding: 60px 0;
+    }
+
+    .trip-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .newsletter-form {
+        flex-direction: column;
+        align-items: center;
+    }
+    .newsletter-form input[type="email"] {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .newsletter-form .btn-secondary {
+        width: 100%;
+    }
+
+    footer .container {
+        padding: 0 15px;
+    }
+    .social-links {
+        margin-top: 5px;
+    }
+    .footer-links {
+        margin-top: 5px;
+    }
+    .footer-links a {
+        margin: 0 8px;
+    }
+
+    #scrollToTopBtn {
+        bottom: 15px;
+        right: 15px;
+        padding: 10px 14px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2em;
+    }
+    h2 {
+        font-size: 1.6em;
+    }
+    .hero-content p {
+        font-size: 0.9em;
+    }
+    .search-form {
+        padding: 20px;
+    }
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+    .search-form .btn-primary {
+        font-size: 1em;
+    }
+
+    .filters, .sorting {
+        padding: 15px;
+    }
+
+    .trip-card h3 {
+        font-size: 1.4em;
+    }
+    .trip-card .description, .trip-card .highlights {
+        font-size: 0.85em;
+    }
+    .trip-card .price {
+        font-size: 1.2em;
+    }
+
+    .cta-newsletter h2 {
+        font-size: 1.8em;
+    }
+    .cta-newsletter p {
+        font-size: 0.95em;
+    }
+
+    footer {
+        padding: 20px 0;
+        font-size: 0.8em;
+    }
+}
+.booking-prompt{
+
+    
+}
