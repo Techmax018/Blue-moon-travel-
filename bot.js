@@ -48,9 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span></span>
                     <span></span>
                     <span></span>
-                </div>
-                <span>Blue is typing...</span>
-            `;
+                </div
             chatbotMessages.appendChild(typingIndicatorElement);
             chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
         }
@@ -84,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Flights
         else if (lowerCaseMessage.includes('flight') || lowerCaseMessage.includes('airline') || lowerCaseMessage.includes('fly')) {
-            return "I can help with flight information! Are you looking for international or domestic flights?";
+            return "I can help with flight information! Are you looking for international or local flights?";
         }
         
         // Hotels
@@ -135,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 addMessage('bot', botResponse);
                 setInputState(true);
                 chatbotInput.focus();
-            }, 1500);
+            }, 3000);
         }
     }
 
