@@ -211,7 +211,6 @@
 
     <footer>
         <p>&copy;| underworldtech | 2025 BlueMoonJourneys | All rights reserved.</p>
-    </footer>
     <div class="chatbot-container">
     <button id="chatbot-toggle-btn" class="chatbot-toggle-btn" title="Chat with us">
         <img src="chatbot.png" alt="Chatbot Icon" class="bot-icon-img">
@@ -219,11 +218,19 @@
     <div id="chatbot-window" class="chatbot-window hidden">
         <div class="chatbot-header">
             <h3>BlueMoonJourneys Assistant</h3>
+            <span id="bot-status" class="bot-status">Online</span> 
             <button id="chatbot-close-btn" class="chatbot-close-btn"><i class="fas fa-times"></i></button>
         </div>
         <div id="chatbot-messages" class="chatbot-messages">
             <div class="message bot-message">Hello! How can I help you today?</div>
-            </div>
+        </div>
+        
+        <div id="chatbot-quick-actions" class="chatbot-quick-actions">
+            <button class="quick-action-btn" data-action="destinations">🗺️ Destinations</button>
+            <button class="quick-action-btn" data-action="booking">✈️ Book Trip</button>
+            <button class="quick-action-btn" data-action="support">❓ Support</button>
+        </div>
+
         <div class="chatbot-input-container">
             <input type="text" id="chatbot-input" placeholder="Type your message...">
             <button id="chatbot-mic-btn" class="mic-button">
