@@ -246,10 +246,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         <li><i class="fas fa-tag"></i> Trip Type: ${trip.type}</li>
                     </ul>
                     <p class="price">Starting from ${currencySymbol}${trip.price.toLocaleString()}</p>
-                    <button class="btn btn-primary">View Details</button>
+                    <button class="btn btn-primary view-details-btn" data-trip-id="${trip.id}" data-currency="${currencySymbol}">View Details</button>
                 </div>
             `;
             gridElement.appendChild(tripCard);
+
+            // Add event listener to View Details button
+            const viewDetailsBtn = tripCard.querySelector('.view-details-btn');
+            viewDetailsBtn.addEventListener('click', () => {
+                openTripDetailsModal(trip, currencySymbol);
+            });
         });
     }
 
@@ -464,3 +470,104 @@ document.addEventListener('DOMContentLoaded', () => {
         bookingContainer.style.display = 'block';
         });
             });
+
+// ==================== TRIP DETAILS MODAL FUNCTIONS ====================
+
+// Store current trip for payment
+let currentTripData = null;
+let currencySymbolForPayment = '$';
+
+// Open trip details modal
+function openTripDetailsModal(trip, currencySymbol) {
+    currentTripData = trip;
+    currencySymbolForPayment = currencySymbol;
+
+    // Populate modal with trip data
+    document.getElementById('modalTripImage').src = trip.image;
+    document.getElementById('modalTripImage').alt = trip.title;
+    document.getElementById('modalTripTitle').textContent = trip.title;
+    document.getElementById('modalTripDescription').textContent = trip.description;
+    
+    // Populate highlights
+    const highlightsUl = document.getElementById('modalTripHighlights');
+    highlightsUl.innerHTML = '';
+    trip.highlights.forEach(highlight => {
+        const li = document.createElement('li');
+        li.innerHTML = `<i class="fas fa-check-circle"></i> ${highlight}`;
+        highlightsUl.appendChild(li);
+    });
+
+    // Populate trip info
+    document.getElementById('modalTripDuration').textContent = `${trip.duration} Days`;
+    document.getElementById('modalTripType').textContent = trip.type;
+    document.getElementById('modalTripPrice').textContent = `${currencySymbol}${trip.price.toLocaleString()}`;
+
+    // Show modal
+    const modal = document.getElementById('tripDetailsModal');
+    modal.style.display = 'block';
+}
+
+// Close trip details modal
+function closeTripDetailsModal() {
+    const modal = document.getElementById('tripDetailsModal');
+    modal.style.display = 'none';
+    currentTripData = null;
+}
+
+// Handle pay button click in modal
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('tripDetailsModal');
+    const closeModalSpan = document.querySelector('.close-modal');
+    const closeModalBtn = document.querySelector('.close-modal-btn');
+    const payButton = document.getElementById('modalPayButton');
+
+    // Close modal when X is clicked
+    if (closeModalSpan) {
+        closeModalSpan.addEventListener('click', closeTripDetailsModal);
+    }
+
+    // Close modal when Close button is clicked
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeTripDetailsModal);
+    }
+
+    // Close modal when clicking outside of it
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            closeTripDetailsModal();
+        }
+    });
+
+    // Handle payment button click
+    if (payButton) {
+        payButton.addEventListener('click', function() {
+            if (currentTripData) {
+                // Prepare booking data for M-Pesa payment
+                const bookingData = {
+                    tripId: currentTripData.id,
+                    destinationName: currentTripData.title,
+                    tripType: currentTripData.type,
+                    totalPrice: currentTripData.price,
+                    duration: currentTripData.duration,
+                    currency: currencySymbolForPayment === 'KES ' ? 'KES' : 'USD',
+                    startDate: new Date().toISOString().split('T')[0],
+                    endDate: new Date(Date.now() + currentTripData.duration * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    numberOfTravelers: 1,
+                    bookingId: `BK-${currentTripData.id}-${Date.now()}`,
+                    userId: 'user-' + Math.random().toString(36).substr(2, 9)
+                };
+
+                // Close the details modal
+                closeTripDetailsModal();
+
+                // Open M-Pesa payment modal
+                if (typeof mpesaPaymentHandler !== 'undefined') {
+                    mpesaPaymentHandler.openPaymentModal(bookingData);
+                } else {
+                    console.log('M-Pesa payment handler not available. Payment data:', bookingData);
+                    alert(`Payment for ${bookingData.destinationName}\nAmount: ${bookingData.currency} ${bookingData.totalPrice.toLocaleString()}`);
+                }
+            }
+        });
+    }
+});

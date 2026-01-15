@@ -231,6 +231,105 @@
 
     <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 
+    <!-- Trip Details Modal -->
+    <div id="tripDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <img id="modalTripImage" src="" alt="Trip Image" class="modal-trip-image">
+            </div>
+            <div class="modal-body">
+                <h2 id="modalTripTitle"></h2>
+                <p id="modalTripDescription"></p>
+                
+                <div class="modal-details">
+                    <div class="detail-section">
+                        <h3>Trip Highlights</h3>
+                        <ul id="modalTripHighlights"></ul>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3>Trip Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Duration:</span>
+                                <span id="modalTripDuration" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Type:</span>
+                                <span id="modalTripType" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Price:</span>
+                                <span id="modalTripPrice" class="info-value"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="modalPayButton" class="btn btn-primary">Proceed to Payment</button>
+                    <button class="btn btn-secondary close-modal-btn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- M-Pesa Payment Modal -->
+    <div id="mpesaPaymentModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <span class="close-btn" onclick="mpesaPaymentHandler.closePaymentModal()">&times;</span>
+        
+        <div class="payment-container">
+          <div class="mpesa-header">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'%3E%3Ctext x='10' y='45' font-size='40' font-weight='bold' fill='%23FF6600'%3EM-Pesa%3C/text%3E%3C/svg%3E" alt="M-Pesa" class="mpesa-logo">
+            <h2>M-Pesa Payment</h2>
+          </div>
+          
+          <div class="booking-summary">
+            <h3>Booking Details</h3>
+            <div id="bookingSummary">
+              <p><strong>Destination:</strong> <span id="mpesaSummaryDestination">-</span></p>
+              <p><strong>Date:</strong> <span id="mpesaSummaryDate">-</span></p>
+              <p><strong>Travelers:</strong> <span id="mpesaSummaryTravelers">-</span></p>
+              <p><strong>Total Amount:</strong> <span id="mpesaSummaryAmount">KES 0.00</span></p>
+            </div>
+          </div>
+
+          <form id="mpesaPaymentForm" onsubmit="mpesaPaymentHandler.handlePaymentSubmit(event)">
+            <div class="form-group">
+              <label for="mpesaPhoneNumber">Phone Number *</label>
+              <input 
+                type="tel" 
+                id="mpesaPhoneNumber" 
+                placeholder="0712345678" 
+                pattern="^(\+?254|0)[17]\d{8}$"
+                required
+                title="Enter a valid Kenyan phone number (e.g., 0712345678)"
+              >
+              <small class="form-help">Enter your M-Pesa registered phone number (07xx or 254)</small>
+            </div>
+
+            <div class="payment-info">
+              <p><i class="fas fa-info-circle"></i> You will receive an M-Pesa prompt to enter your PIN</p>
+            </div>
+
+            <button type="submit" id="mpesaSubmitButton" class="btn btn-primary btn-block">
+              Pay <span id="mpesaPaymentAmount">KES 0.00</span> via M-Pesa
+            </button>
+          </form>
+
+          <div id="mpesaPaymentStatus" style="display: none; margin-top: 20px; padding: 15px; border-radius: 5px;">
+            <p id="mpesaPaymentStatusMessage"></p>
+          </div>
+
+          <div class="payment-security">
+            <p><i class="fas fa-lock"></i> Secure payment powered by Safaricom</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- API and M-Pesa Integration -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="api.js"></script>
