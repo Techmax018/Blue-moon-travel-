@@ -1,0 +1,159 @@
+<!-- M-Pesa Payment Modal -->
+<div id="mpesaPaymentModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close-btn" onclick="mpesaPaymentHandler.closePaymentModal()">&times;</span>
+    
+    <div class="payment-container">
+      <div class="mpesa-header">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'%3E%3Ctext x='10' y='45' font-size='40' font-weight='bold' fill='%23FF6600'%3EM-Pesa%3C/text%3E%3C/svg%3E" alt="M-Pesa" class="mpesa-logo">
+        <h2>M-Pesa Payment</h2>
+      </div>
+      
+      <div class="booking-summary">
+        <h3>Booking Details</h3>
+        <div id="bookingSummary">
+          <p><strong>Destination:</strong> <span id="mpesaSummaryDestination">-</span></p>
+          <p><strong>Date:</strong> <span id="mpesaSummaryDate">-</span></p>
+          <p><strong>Travelers:</strong> <span id="mpesaSummaryTravelers">-</span></p>
+          <p><strong>Total Amount:</strong> <span id="mpesaSummaryAmount">KES 0.00</span></p>
+        </div>
+      </div>
+
+      <form id="mpesaPaymentForm" onsubmit="mpesaPaymentHandler.handlePaymentSubmit(event)">
+        <div class="form-group">
+          <label for="mpesaPhoneNumber">Phone Number *</label>
+          <input 
+            type="tel" 
+            id="mpesaPhoneNumber" 
+            placeholder="0712345678" 
+            pattern="^(\+?254|0)[17]\d{8}$"
+            required
+            title="Enter a valid Kenyan phone number (e.g., 0712345678)"
+          >
+          <small class="form-help">Enter your M-Pesa registered phone number (07xx or 254)</small>
+        </div>
+
+        <div class="payment-info">
+          <p><i class="fas fa-info-circle"></i> You will receive an M-Pesa prompt to enter your PIN</p>
+        </div>
+
+        <button type="submit" id="mpesaSubmitButton" class="btn btn-primary btn-block">
+          Pay <span id="mpesaPaymentAmount">KES 0.00</span> via M-Pesa
+        </button>
+      </form>
+
+      <div id="mpesaPaymentStatus" style="display: none; margin-top: 20px; padding: 15px; border-radius: 5px;">
+        <p id="mpesaPaymentStatusMessage"></p>
+      </div>
+
+      <div class="payment-security">
+        <p><i class="fas fa-lock"></i> Secure payment powered by Safaricom</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .mpesa-header {
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #FF6600;
+    padding-bottom: 15px;
+  }
+
+  .mpesa-logo {
+    height: 40px;
+    margin-bottom: 10px;
+  }
+
+  .mpesa-header h2 {
+    color: #FF6600;
+    margin: 0;
+    font-size: 24px;
+  }
+
+  .form-help {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+  }
+
+  .payment-info {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196F3;
+    padding: 12px;
+    margin: 15px 0;
+    border-radius: 4px;
+    color: #1565c0;
+    font-size: 14px;
+  }
+
+  .payment-info i {
+    margin-right: 8px;
+  }
+
+  .payment-security {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    color: #666;
+    font-size: 12px;
+  }
+
+  .payment-security i {
+    color: #4CAF50;
+    margin-right: 5px;
+  }
+
+  .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #FF6600;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 15px auto;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  #mpesaPaymentStatus {
+    text-align: center;
+    padding: 15px;
+    border-radius: 5px;
+  }
+
+  #mpesaPaymentStatus.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  #mpesaPaymentStatus.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  #mpesaPaymentStatus.processing {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #90caf9;
+  }
+
+  @media (max-width: 600px) {
+    .modal-content {
+      width: 95%;
+      margin: 20% auto;
+    }
+
+    .mpesa-header h2 {
+      font-size: 20px;
+    }
+  }
+</style>
