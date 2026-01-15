@@ -1,7 +1,6 @@
-// M-Pesa Payment API
+// --- M-Pesa Payment API ---
 const mpesaAPI = {
-  // Initiate M-Pesa payment
-  initiate: async (phoneNumber, amount, bookingId, userId, destinationName) => {
+  initiate: async (phoneNumber, amount, bookingId, userId, destinationName, currency) => {
     try {
       const response = await axios.post(
         'http://localhost:5000/api/mpesa/initiate',
@@ -11,6 +10,7 @@ const mpesaAPI = {
           bookingId,
           userId,
           destinationName,
+          currency // Pass the detected currency to the server
         }
       );
       return response.data;
@@ -20,304 +20,147 @@ const mpesaAPI = {
     }
   },
 
-  // Check payment status
   checkStatus: async (bookingId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/mpesa/status/${bookingId}`
-      );
+      const response = await axios.get(`http://localhost:5000/api/mpesa/status/${bookingId}`);
       return response.data;
     } catch (error) {
       console.error('Error checking payment status:', error);
       throw error;
     }
-  },
-
-  // Query transaction status
-  queryStatus: async (checkoutRequestId) => {
-    try {
-      const response = await axios.post(
-        'http://localhost:5000/api/mpesa/query',
-        { checkoutRequestId }
-      );
-      return response.data;
-    } catch (error) {
-      console.error('Error querying transaction status:', error);
-      throw error;
-    }
-  },
-
-  // Get all payments
-  getAll: async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/mpesa');
-      return response.data.data;
-    } catch (error) {
-      console.error('Error fetching payments:', error);
-      throw error;
-    }
-  },
+  }
 };
 
-// M-Pesa Payment Handler
+// --- M-Pesa Payment Handler Class ---
 class MpesaPaymentHandler {
   constructor() {
     this.currentBookingData = null;
     this.paymentCheckInterval = null;
   }
 
-  // Open M-Pesa payment modal
   openPaymentModal(bookingData) {
     this.currentBookingData = bookingData;
-
-    // Update booking summary
-    document.getElementById('mpesaSummaryDestination').textContent =
-      bookingData.destinationName;
-    document.getElementById('mpesaSummaryDate').textContent = `${new Date(
-      bookingData.startDate
-    ).toLocaleDateString()} - ${new Date(bookingData.endDate).toLocaleDateString()}`;
-    document.getElementById('mpesaSummaryTravelers').textContent =
-      bookingData.numberOfTravelers;
-    document.getElementById('mpesaSummaryAmount').textContent = formatCurrency(
-      bookingData.totalPrice,
-      'KES'
-    );
-    document.getElementById('mpesaPaymentAmount').textContent = formatCurrency(
-      bookingData.totalPrice,
-      'KES'
-    );
-
-    // Show modal
-    document.getElementById('mpesaPaymentModal').style.display = 'block';
     
-    // Reset form
+    // 1. Get currency from data (Defaults to KES if not provided)
+    const currency = bookingData.currency || 'KES';
+
+    // 2. Update UI elements with dynamic currency
+    document.getElementById('mpesaSummaryDestination').textContent = bookingData.destinationName;
+    document.getElementById('mpesaSummaryDate').textContent = `${new Date(bookingData.startDate).toLocaleDateString()} - ${new Date(bookingData.endDate).toLocaleDateString()}`;
+    document.getElementById('mpesaSummaryTravelers').textContent = bookingData.numberOfTravelers;
+    
+    // Format amounts correctly based on currency
+    const formattedPrice = formatCurrency(bookingData.totalPrice, currency);
+    document.getElementById('mpesaSummaryAmount').textContent = formattedPrice;
+    document.getElementById('mpesaPaymentAmount').textContent = formattedPrice;
+
+    // Show modal and reset
+    document.getElementById('mpesaPaymentModal').style.display = 'block';
     document.getElementById('mpesaPaymentForm').reset();
     document.getElementById('mpesaPaymentStatus').style.display = 'none';
   }
 
-  // Close payment modal
-  closePaymentModal() {
-    document.getElementById('mpesaPaymentModal').style.display = 'none';
-    if (this.paymentCheckInterval) {
-      clearInterval(this.paymentCheckInterval);
-    }
-  }
-
-  // Handle payment form submission
   async handlePaymentSubmit(event) {
     event.preventDefault();
-
     const phoneNumber = document.getElementById('mpesaPhoneNumber').value;
     const submitButton = document.getElementById('mpesaSubmitButton');
+    const currency = this.currentBookingData.currency || 'KES';
 
-    // Validate phone number
     if (!this.validatePhoneNumber(phoneNumber)) {
       this.showPaymentError('Please enter a valid Kenyan phone number (e.g., 0712345678)');
       return;
     }
 
-    // Disable submit button
     submitButton.disabled = true;
     submitButton.textContent = 'Processing...';
 
     try {
-      // Initiate M-Pesa payment
+      // 3. Initiate payment with currency included
       const paymentResponse = await mpesaAPI.initiate(
         phoneNumber,
         this.currentBookingData.totalPrice,
         this.currentBookingData.bookingId,
         this.currentBookingData.userId,
-        this.currentBookingData.destinationName
+        this.currentBookingData.destinationName,
+        currency
       );
 
       if (paymentResponse.success) {
-        this.showPaymentProcessing(
-          `Enter your M-Pesa PIN to complete the payment. You should receive a prompt on ${phoneNumber}`
-        );
-
-        // Start polling for payment status
+        this.showPaymentProcessing(`Enter M-Pesa PIN on ${phoneNumber} to pay ${formatCurrency(this.currentBookingData.totalPrice, currency)}`);
         this.startPaymentStatusPolling(this.currentBookingData.bookingId);
       } else {
-        this.showPaymentError(
-          paymentResponse.message || 'Failed to initiate M-Pesa payment'
-        );
-        submitButton.disabled = false;
-        submitButton.textContent = `Pay ${formatCurrency(
-          this.currentBookingData.totalPrice,
-          'KES'
-        )}`;
+        throw new Error(paymentResponse.message);
       }
     } catch (error) {
-      console.error('Payment Error:', error);
-      this.showPaymentError(
-        error.response?.data?.message || 'Failed to initiate payment. Please try again.'
-      );
+      this.showPaymentError(error.message || 'Failed to initiate payment');
       submitButton.disabled = false;
-      submitButton.textContent = `Pay ${formatCurrency(
-        this.currentBookingData.totalPrice,
-        'KES'
-      )}`;
+      submitButton.textContent = `Pay ${formatCurrency(this.currentBookingData.totalPrice, currency)}`;
     }
   }
 
-  // Poll for payment status
-  startPaymentStatusPolling(bookingId) {
-    let checkCount = 0;
-    const maxChecks = 120; // 2 minutes with 1 second intervals
+  // --- UI State Management (Processing, Success, Polling) ---
 
-    this.paymentCheckInterval = setInterval(async () => {
-      checkCount++;
-
-      try {
-        const statusResponse = await mpesaAPI.checkStatus(bookingId);
-
-        if (statusResponse.success && statusResponse.data.status === 'succeeded') {
-          clearInterval(this.paymentCheckInterval);
-          this.showPaymentSuccess(
-            `Payment successful! Your booking is confirmed. Transaction ID: ${statusResponse.data.transactionId}`
-          );
-
-          setTimeout(() => {
-            this.closePaymentModal();
-            window.location.href = `/confirmation.html?bookingId=${bookingId}`;
-          }, 3000);
-        } else if (statusResponse.success && statusResponse.data.status === 'failed') {
-          clearInterval(this.paymentCheckInterval);
-          this.showPaymentError('Payment failed. Please try again.');
-          document.getElementById('mpesaSubmitButton').disabled = false;
-          document.getElementById('mpesaSubmitButton').textContent = `Pay ${formatCurrency(
-            this.currentBookingData.totalPrice,
-            'KES'
-          )}`;
-        }
-      } catch (error) {
-        console.error('Error checking payment status:', error);
-      }
-
-      // Stop polling after max checks
-      if (checkCount >= maxChecks) {
-        clearInterval(this.paymentCheckInterval);
-        this.showPaymentError(
-          'Payment timeout. Please check your phone or try again.'
-        );
-        document.getElementById('mpesaSubmitButton').disabled = false;
-        document.getElementById('mpesaSubmitButton').textContent = `Pay ${formatCurrency(
-          this.currentBookingData.totalPrice,
-          'KES'
-        )}`;
-      }
-    }, 1000);
-  }
-
-  // Validate phone number
-  validatePhoneNumber(phoneNumber) {
-    // Accept formats: 0712345678, 254712345678, +254712345678
-    const phoneRegex = /^(\+?254|0)[17]\d{8}$/;
-    return phoneRegex.test(phoneNumber);
-  }
-
-  // Show payment processing message
   showPaymentProcessing(message) {
-    const statusDiv = document.getElementById('mpesaPaymentStatus');
-    statusDiv.className = 'processing';
-    statusDiv.style.display = 'block';
-    document.getElementById('mpesaPaymentStatusMessage').innerHTML = `
-      <div style="text-align: center;">
-        <p style="margin-bottom: 10px;">${message}</p>
-        <div class="spinner"></div>
-      </div>
-    `;
-  }
-
-  // Show payment success
-  showPaymentSuccess(message) {
-    const statusDiv = document.getElementById('mpesaPaymentStatus');
-    statusDiv.className = 'success';
-    statusDiv.style.display = 'block';
-    document.getElementById('mpesaPaymentStatusMessage').textContent = message;
-  }
-
-  // Show payment error
-  showPaymentError(message) {
-    const statusDiv = document.getElementById('mpesaPaymentStatus');
-    statusDiv.className = 'error';
-    statusDiv.style.display = 'block';
-    document.getElementById('mpesaPaymentStatusMessage').textContent = `Error: ${message}`;
-  }
-}
-
-// Initialize handler
-const mpesaPaymentHandler = new MpesaPaymentHandler();
-
-// Helper function to format currency
-function formatCurrency(amount, currency = 'KES') {
-  return new Intl.NumberFormat('en-KE', {
-    style: 'currency',
-    currency: currency,
-  }).format(amount);
-}
-// Inside MpesaPaymentHandler class
-
-// 1. Updated Processing State
-showPaymentProcessing(message) {
     const overlay = document.getElementById('mpesaLoaderOverlay');
     const mainContent = document.getElementById('mpesaMainContent');
-    
-    overlay.style.display = 'flex';
-    mainContent.style.filter = 'blur(2px)'; // Aesthetic blur
+    if(overlay) overlay.style.display = 'flex';
+    if(mainContent) mainContent.style.filter = 'blur(2px)';
     
     document.getElementById('loaderContent').innerHTML = `
         <div class="spinner"></div>
         <p class="pulse-text">${message}</p>
-        <small id="pollingCountdown">2:00 remaining</small>
+        <small id="pollingCountdown">Waiting for PIN...</small>
     `;
-}
+  }
 
-// 2. Updated Success State
-showPaymentSuccess(message) {
-    const loaderContent = document.getElementById('loaderContent');
-    
-    loaderContent.innerHTML = `
-        <svg class="checkmark-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-        </svg>
-        <h3 style="color: #4CAF50;">Payment Successful!</h3>
-        <p style="font-size: 14px; color: #666;">${message}</p>
-    `;
-}
-
-// 3. Updated Polling with a Countdown
-startPaymentStatusPolling(bookingId) {
+  startPaymentStatusPolling(bookingId) {
     let secondsLeft = 120;
-    
     this.paymentCheckInterval = setInterval(async () => {
-        secondsLeft--;
-        const countdownEl = document.getElementById('pollingCountdown');
-        if(countdownEl) {
-            const mins = Math.floor(secondsLeft / 60);
-            const secs = secondsLeft % 60;
-            countdownEl.textContent = `Validating: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      secondsLeft--;
+      const countdownEl = document.getElementById('pollingCountdown');
+      if(countdownEl) {
+        const mins = Math.floor(secondsLeft / 60);
+        const secs = secondsLeft % 60;
+        countdownEl.textContent = `Validating: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }
+
+      try {
+        const statusResponse = await mpesaAPI.checkStatus(bookingId);
+        if (statusResponse.success && statusResponse.data.status === 'succeeded') {
+          clearInterval(this.paymentCheckInterval);
+          this.showPaymentSuccess(`Transaction ${statusResponse.data.transactionId} confirmed.`);
+          setTimeout(() => { window.location.href = `/confirmation.html?bookingId=${bookingId}`; }, 4000);
         }
+      } catch (e) { console.error("Polling error:", e); }
 
-        try {
-            const statusResponse = await mpesaAPI.checkStatus(bookingId);
-
-            if (statusResponse.success && statusResponse.data.status === 'succeeded') {
-                clearInterval(this.paymentCheckInterval);
-                this.showPaymentSuccess(`Transaction ${statusResponse.data.transactionId} confirmed.`);
-                
-                setTimeout(() => {
-                    window.location.href = `/confirmation.html?bookingId=${bookingId}`;
-                }, 4000);
-            } 
-            // ... rest of your error logic
-        } catch (e) { console.error(e); }
-
-        if (secondsLeft <= 0) {
-            clearInterval(this.paymentCheckInterval);
-            this.closePaymentModal();
-            alert("Payment timeout. If you paid, please check your history or contact support.");
-        }
+      if (secondsLeft <= 0) {
+        clearInterval(this.paymentCheckInterval);
+        this.closePaymentModal();
+        alert("Payment timeout. Please try again.");
+      }
     }, 1000);
+  }
+
+  validatePhoneNumber(phoneNumber) {
+    return /^(\+?254|0)[17]\d{8}$/.test(phoneNumber);
+  }
+
+  closePaymentModal() {
+    document.getElementById('mpesaPaymentModal').style.display = 'none';
+    const mainContent = document.getElementById('mpesaMainContent');
+    if(mainContent) mainContent.style.filter = 'none';
+    if (this.paymentCheckInterval) clearInterval(this.paymentCheckInterval);
+  }
 }
+
+// --- Helper Functions ---
+function formatCurrency(amount, currency = 'KES') {
+  const locale = currency === 'USD' ? 'en-US' : 'en-KE';
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+  }).format(amount);
+}
+
+// Initialize
+const mpesaPaymentHandler = new MpesaPaymentHandler();
