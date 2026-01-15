@@ -256,3 +256,68 @@ function formatCurrency(amount, currency = 'KES') {
     currency: currency,
   }).format(amount);
 }
+// Inside MpesaPaymentHandler class
+
+// 1. Updated Processing State
+showPaymentProcessing(message) {
+    const overlay = document.getElementById('mpesaLoaderOverlay');
+    const mainContent = document.getElementById('mpesaMainContent');
+    
+    overlay.style.display = 'flex';
+    mainContent.style.filter = 'blur(2px)'; // Aesthetic blur
+    
+    document.getElementById('loaderContent').innerHTML = `
+        <div class="spinner"></div>
+        <p class="pulse-text">${message}</p>
+        <small id="pollingCountdown">2:00 remaining</small>
+    `;
+}
+
+// 2. Updated Success State
+showPaymentSuccess(message) {
+    const loaderContent = document.getElementById('loaderContent');
+    
+    loaderContent.innerHTML = `
+        <svg class="checkmark-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+        <h3 style="color: #4CAF50;">Payment Successful!</h3>
+        <p style="font-size: 14px; color: #666;">${message}</p>
+    `;
+}
+
+// 3. Updated Polling with a Countdown
+startPaymentStatusPolling(bookingId) {
+    let secondsLeft = 120;
+    
+    this.paymentCheckInterval = setInterval(async () => {
+        secondsLeft--;
+        const countdownEl = document.getElementById('pollingCountdown');
+        if(countdownEl) {
+            const mins = Math.floor(secondsLeft / 60);
+            const secs = secondsLeft % 60;
+            countdownEl.textContent = `Validating: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        try {
+            const statusResponse = await mpesaAPI.checkStatus(bookingId);
+
+            if (statusResponse.success && statusResponse.data.status === 'succeeded') {
+                clearInterval(this.paymentCheckInterval);
+                this.showPaymentSuccess(`Transaction ${statusResponse.data.transactionId} confirmed.`);
+                
+                setTimeout(() => {
+                    window.location.href = `/confirmation.html?bookingId=${bookingId}`;
+                }, 4000);
+            } 
+            // ... rest of your error logic
+        } catch (e) { console.error(e); }
+
+        if (secondsLeft <= 0) {
+            clearInterval(this.paymentCheckInterval);
+            this.closePaymentModal();
+            alert("Payment timeout. If you paid, please check your history or contact support.");
+        }
+    }, 1000);
+}
