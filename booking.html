@@ -8,6 +8,178 @@
     <link rel="stylesheet" href="booking.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+    <style>
+        :root {
+            --mpesa-green: #2fb842;
+            --slate-900: #0f172a;
+            --slate-600: #475569;
+            --slate-100: #f1f5f9;
+            --white: #ffffff;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        body { font-family: 'Inter', system-ui, sans-serif; background: #e2e8f0; }
+
+        /* Modal Overlay */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        /* Container */
+        .modal-content {
+            background: var(--white);
+            width: 100%;
+            max-width: 400px;
+            border-radius: 28px;
+            position: relative;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .mpesa-header {
+            padding: 32px 24px 10px;
+            text-align: center;
+        }
+
+        .mpesa-logo { height: 28px; margin-bottom: 8px; }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background: var(--slate-100);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--slate-600);
+            border: none;
+        }
+
+        /* Summary Section */
+        .summary-card {
+            background: var(--slate-100);
+            margin: 20px 24px;
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .summary-row label { font-size: 13px; color: var(--slate-600); }
+        .summary-row span { font-size: 13px; font-weight: 600; color: var(--slate-900); }
+
+        .total-row {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-amount { 
+            font-size: 24px; 
+            font-weight: 800; 
+            color: var(--slate-900); 
+            letter-spacing: -1px;
+        }
+
+        /* Input Form */
+        .form-area { padding: 0 24px 32px; }
+
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--slate-900);
+        }
+
+        .phone-input-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .phone-input-container input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 16px 16px 16px 45px;
+            border: 2px solid var(--slate-100);
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .phone-input-container input:focus {
+            border-color: var(--mpesa-green);
+            background: white;
+        }
+
+        .phone-input-container i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--slate-600);
+        }
+
+        /* Action Button */
+        .pay-button {
+            width: 100%;
+            background: var(--slate-900);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pay-button:active { transform: scale(0.98); }
+
+        .secure-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--slate-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+    </style>
+
+
 <body>
     <header>
     <div class="container">
@@ -276,59 +448,78 @@
     </div>
 
     <!-- M-Pesa Payment Modal -->
-    <div id="mpesaPaymentModal" class="modal" style="display: none;">
-      <div class="modal-content">
-        <span class="close-btn" onclick="mpesaPaymentHandler.closePaymentModal()">&times;</span>
-        
-        <div class="payment-container">
-          <div class="mpesa-header">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'%3E%3Ctext x='10' y='45' font-size='40' font-weight='bold' fill='%23FF6600'%3EM-Pesa%3C/text%3E%3C/svg%3E" alt="M-Pesa" class="mpesa-logo">
-            <h2>M-Pesa Payment</h2>
-          </div>
-          
-          <div class="booking-summary">
-            <h3>Booking Details</h3>
-            <div id="bookingSummary">
-              <p><strong>Destination:</strong> <span id="mpesaSummaryDestination">-</span></p>
-              <p><strong>Date:</strong> <span id="mpesaSummaryDate">-</span></p>
-              <p><strong>Travelers:</strong> <span id="mpesaSummaryTravelers">-</span></p>
-              <p><strong>Total Amount:</strong> <span id="mpesaSummaryAmount">KES 0.00</span></p>
+   <div id="mpesaPaymentModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="mpesaPaymentHandler.closePaymentModal()">&times;</span>
+
+    <div id="mpesaLoaderOverlay" class="payment-loader-overlay">
+      <div id="loaderContent">
+        <div class="spinner"></div>
+        <p class="pulse-text">Waiting for M-Pesa PIN...</p>
+        <small id="pollingCountdown" style="color: #64748b;">Do not refresh this page</small>
+      </div>
+    </div>
+
+    <div id="mpesaMainContent">
+      <div class="mpesa-header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/M-PESA_LOGO-01.svg" alt="M-Pesa" class="mpesa-logo">
+        <h2>Secure Checkout</h2>
+      </div>
+
+      <div class="booking-summary">
+        <div class="summary-card">
+          <div class="summary-grid">
+            <div class="summary-item full">
+              <label>Destination</label>
+              <span id="mpesaSummaryDestination">-</span>
+            </div>
+            <div class="summary-item">
+              <label>Travelers</label>
+              <span id="mpesaSummaryTravelers">-</span>
+            </div>
+            <div class="summary-item">
+              <label>Dates</label>
+              <span id="mpesaSummaryDate">-</span>
             </div>
           </div>
-
-          <form id="mpesaPaymentForm" onsubmit="mpesaPaymentHandler.handlePaymentSubmit(event)">
-            <div class="form-group">
-              <label for="mpesaPhoneNumber">Phone Number *</label>
-              <input 
-                type="tel" 
-                id="mpesaPhoneNumber" 
-                placeholder="0712345678" 
-                pattern="^(\+?254|0)[17]\d{8}$"
-                required
-                title="Enter a valid Kenyan phone number (e.g., 0712345678)"
-              >
-              <small class="form-help">Enter your M-Pesa registered phone number (07xx or 254)</small>
-            </div>
-
-            <div class="payment-info">
-              <p><i class="fas fa-info-circle"></i> You will receive an M-Pesa prompt to enter your PIN</p>
-            </div>
-
-            <button type="submit" id="mpesaSubmitButton" class="btn btn-primary btn-block">
-              Pay <span id="mpesaPaymentAmount">KES 0.00</span> via M-Pesa
-            </button>
-          </form>
-
-          <div id="mpesaPaymentStatus" style="display: none; margin-top: 20px; padding: 15px; border-radius: 5px;">
-            <p id="mpesaPaymentStatusMessage"></p>
-          </div>
-
-          <div class="payment-security">
-            <p><i class="fas fa-lock"></i> Secure payment powered by Safaricom</p>
+          <div class="summary-total">
+            <label style="margin:0; font-weight:700; color: #1e293b;">Total Amount</label>
+            <span id="mpesaSummaryAmount">KES 0.00</span>
           </div>
         </div>
       </div>
+
+      <form id="mpesaPaymentForm">
+        <div class="form-group">
+          <label for="mpesaPhoneNumber">M-Pesa Phone Number</label>
+          <div class="input-wrapper">
+            <i class="fas fa-phone"></i>
+            <input 
+              type="tel" 
+              id="mpesaPhoneNumber" 
+              placeholder="0712345678" 
+              pattern="^(\+?254|0)[17]\d{8}$"
+              required
+            >
+          </div>
+          <small style="font-size: 0.75rem; color: #64748b; margin-top: 5px; display: block;">
+            You will receive a prompt to enter your PIN on this phone.
+          </small>
+        </div>
+
+        <button type="submit" id="mpesaSubmitButton" class="mpesa-btn">
+          <i class="fas fa-lock"></i>
+          Pay <span id="mpesaPaymentAmount">KES 0.00</span>
+        </button>
+      </form>
+
+      <div class="security-badge">
+        <i class="fas fa-shield-alt" style="color: var(--mpesa-green);"></i> 
+        Secure payment encrypted by Safaricom
+      </div>
     </div>
+  </div>
+</div>
 
     <!-- API and M-Pesa Integration -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
