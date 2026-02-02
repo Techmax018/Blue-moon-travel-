@@ -1,224 +1,173 @@
 <style>
-  :root {
-    --mpesa-green: #4CAF50;
-    --mpesa-orange: #FF6600;
-    --bluemoon-blue: #1e293b;
-    --text-muted: #64748b;
-    --bg-light: #f8fafc;
-  }
+        :root {
+            --mpesa-green: #2fb842;
+            --slate-900: #0f172a;
+            --slate-600: #475569;
+            --slate-100: #f1f5f9;
+            --white: #ffffff;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
 
-  /* Modal Overlay */
-  #mpesaPaymentModal.modal {
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(8px);
-    display: none; /* Controlled by JS */
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
+        body { font-family: 'Inter', system-ui, sans-serif; background: #e2e8f0; }
 
-  /* Modal Container */
-  .modal-content {
-    background: #ffffff;
-    width: 100%;
-    max-width: 450px;
-    border-radius: 20px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  }
+        /* Modal Overlay */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
 
-  /* Header Section */
-  .mpesa-header {
-    background: var(--bg-light);
-    padding: 25px;
-    text-align: center;
-    border-bottom: 1px solid #e2e8f0;
-  }
+        /* Container */
+        .modal-content {
+            background: var(--white);
+            width: 100%;
+            max-width: 400px;
+            border-radius: 28px;
+            position: relative;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-  .mpesa-logo {
-    height: 40px;
-    margin-bottom: 10px;
-  }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  .mpesa-header h2 {
-    margin: 0;
-    color: var(--bluemoon-blue);
-    font-size: 1.25rem;
-    font-weight: 700;
-  }
+        /* Header */
+        .mpesa-header {
+            padding: 32px 24px 10px;
+            text-align: center;
+        }
 
-  /* Close Button */
-  .close-btn {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    font-size: 28px;
-    color: var(--text-muted);
-    cursor: pointer;
-    line-height: 1;
-    z-index: 100;
-    transition: color 0.2s;
-  }
+        .mpesa-logo { height: 28px; margin-bottom: 8px; }
 
-  .close-btn:hover { color: var(--mpesa-orange); }
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background: var(--slate-100);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--slate-600);
+            border: none;
+        }
 
-  /* Booking Summary Card */
-  .booking-summary {
-    padding: 20px 25px;
-  }
+        /* Summary Section */
+        .summary-card {
+            background: var(--slate-100);
+            margin: 20px 24px;
+            padding: 20px;
+            border-radius: 20px;
+        }
 
-  .summary-card {
-    background: var(--bg-light);
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 15px;
-  }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
 
-  .summary-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-  }
+        .summary-row label { font-size: 13px; color: var(--slate-600); }
+        .summary-row span { font-size: 13px; font-weight: 600; color: var(--slate-900); }
 
-  .summary-item label {
-    display: block;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-  }
+        .total-row {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-  .summary-item span {
-    font-weight: 600;
-    color: var(--bluemoon-blue);
-    font-size: 0.9rem;
-    display: block;
-  }
+        .total-amount { 
+            font-size: 24px; 
+            font-weight: 800; 
+            color: var(--slate-900); 
+            letter-spacing: -1px;
+        }
 
-  .summary-item.full { grid-column: span 2; }
+        /* Input Form */
+        .form-area { padding: 0 24px 32px; }
 
-  .summary-total {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px dashed #cbd5e1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--slate-900);
+        }
 
-  .summary-total span {
-    font-size: 1.15rem;
-    color: var(--mpesa-orange);
-    font-weight: 800;
-  }
+        .phone-input-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
 
-  /* Form Elements */
-  #mpesaMainContent { padding: 0 25px 25px 25px; }
+        .phone-input-container input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 16px 16px 16px 45px;
+            border: 2px solid var(--slate-100);
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s;
+            outline: none;
+        }
 
-  .form-group { margin-bottom: 20px; }
+        .phone-input-container input:focus {
+            border-color: var(--mpesa-green);
+            background: white;
+        }
 
-  .form-group label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--bluemoon-blue);
-    font-size: 0.9rem;
-  }
+        .phone-input-container i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--slate-600);
+        }
 
-  .input-wrapper { position: relative; }
+        /* Action Button */
+        .pay-button {
+            width: 100%;
+            background: var(--slate-900);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
 
-  .input-wrapper i {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-  }
+        .pay-button:active { transform: scale(0.98); }
 
-  .input-wrapper input {
-    width: 100%;
-    padding: 14px 14px 14px 40px;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    font-size: 1rem;
-    transition: all 0.2s;
-  }
-
-  .input-wrapper input:focus {
-    border-color: var(--mpesa-green);
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
-  }
-
-  .mpesa-btn {
-    width: 100%;
-    background: var(--mpesa-green);
-    color: white;
-    border: none;
-    padding: 16px;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: transform 0.2s, background 0.2s;
-  }
-
-  .mpesa-btn:hover { background: #3d8b40; transform: translateY(-1px); }
-
-  /* Loader Overlay */
-  .payment-loader-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.96);
-    display: none; /* Controlled by JS */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-    text-align: center;
-    padding: 40px;
-  }
-
-  .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid var(--mpesa-orange);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-  .pulse-text {
-    margin-top: 20px;
-    font-weight: 700;
-    color: var(--mpesa-orange);
-    animation: pulse 1.5s infinite;
-  }
-
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-  .security-badge {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-  }
-</style>
+        .secure-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--slate-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+    </style>
 
 <div id="mpesaPaymentModal" class="modal">
   <div class="modal-content">
