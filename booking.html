@@ -495,15 +495,22 @@
     </div>
 
     <!-- M-Pesa Payment Modal -->
-   <div id="mpesaPaymentModal" class="modal">
+  <div id="mpesaPaymentModal" class="modal">
   <div class="modal-content">
-    <span class="close-btn" onclick="mpesaPaymentHandler.closePaymentModal()">&times;</span>
+    <button class="close-btn" onclick="mpesaPaymentHandler.closePaymentModal()" aria-label="Close modal">&times;</button>
 
     <div id="mpesaLoaderOverlay" class="payment-loader-overlay">
-      <div id="loaderContent">
-        <div class="spinner"></div>
-        <p class="pulse-text">Waiting for M-Pesa PIN...</p>
-        <small id="pollingCountdown" style="color: #64748b;">Do not refresh this page</small>
+      <div class="loader-visual">
+        <div class="spinner-outer"></div>
+        <i class="fas fa-mobile-screen-button loader-icon"></i>
+      </div>
+      <h3 class="status-text pulse">Awaiting Payment...</h3>
+      <p class="instruction-text">
+        Please check your phone for the <strong>M-Pesa PIN prompt</strong> to complete your booking.
+      </p>
+      <div class="loader-footer">
+        <i class="fas fa-circle-notch fa-spin"></i>
+        <span id="pollingCountdown">Do not refresh or close this page</span>
       </div>
     </div>
 
@@ -518,25 +525,25 @@
           <div class="summary-grid">
             <div class="summary-item full">
               <label>Destination</label>
-              <span id="mpesaSummaryDestination">-</span>
+              <span id="mpesaSummaryDestination">--</span>
             </div>
             <div class="summary-item">
               <label>Travelers</label>
-              <span id="mpesaSummaryTravelers">-</span>
+              <span id="mpesaSummaryTravelers">--</span>
             </div>
             <div class="summary-item">
               <label>Dates</label>
-              <span id="mpesaSummaryDate">-</span>
+              <span id="mpesaSummaryDate">--</span>
             </div>
           </div>
-          <div class="summary-total">
-            <label style="margin:0; font-weight:700; color: #1e293b;">Total Amount</label>
-            <span id="mpesaSummaryAmount">KES 0.00</span>
+          <div class="total-row">
+            <label>Total Amount</label>
+            <span id="mpesaSummaryAmount" class="total-amount">KES 0.00</span>
           </div>
         </div>
       </div>
 
-      <form id="mpesaPaymentForm">
+      <form id="mpesaPaymentForm" class="form-area">
         <div class="form-group">
           <label for="mpesaPhoneNumber">M-Pesa Phone Number</label>
           <div class="input-wrapper">
@@ -544,25 +551,25 @@
             <input 
               type="tel" 
               id="mpesaPhoneNumber" 
-              placeholder="0712345678" 
+              placeholder="+254712345678" 
               pattern="^(\+?254|0)[17]\d{8}$"
               required
             >
           </div>
-          <small style="font-size: 0.75rem; color: #64748b; margin-top: 5px; display: block;">
-            You will receive a prompt to enter your PIN on this phone.
-          </small>
+          <p class="input-hint">
+            Ensure your phone is unlocked to receive the STK push prompt.
+          </p>
         </div>
 
         <button type="submit" id="mpesaSubmitButton" class="mpesa-btn">
           <i class="fas fa-lock"></i>
-          Pay <span id="mpesaPaymentAmount">KES 0.00</span>
+          <span>Pay <span id="btnAmount">KES 0.00</span></span>
         </button>
       </form>
 
       <div class="security-badge">
-        <i class="fas fa-shield-alt" style="color: var(--mpesa-green);"></i> 
-        Secure payment encrypted by Safaricom
+        <i class="fas fa-shield-halved"></i> 
+        <span>Securely processed via Safaricom</span>
       </div>
     </div>
   </div>
