@@ -1,46 +1,8 @@
-const mpesaPaymentHandler = {
-    openPaymentModal(bookingData) {
-        const mpesaModal = document.getElementById('mpesaPaymentModal');
-        if (!mpesaModal) return;
-
-        // Populate the summary fields in your M-Pesa modal
-        document.getElementById('mpesaSummaryDestination').textContent = bookingData.destinationName;
-        document.getElementById('mpesaSummaryTravelers').textContent = bookingData.numberOfTravelers + " Traveler(s)";
-        document.getElementById('mpesaSummaryDate').textContent = bookingData.startDate;
-        
-        const priceString = `${bookingData.currency} ${bookingData.totalPrice.toLocaleString()}`;
-        document.getElementById('mpesaSummaryAmount').textContent = priceString;
-        document.getElementById('btnAmount').textContent = priceString;
-
-        // Reset state
-        document.getElementById('mpesaLoaderOverlay').style.display = 'none';
-        document.getElementById('mpesaMainContent').style.display = 'block';
-        mpesaModal.style.display = 'flex';
-    },
-
-    closePaymentModal() {
-        const mpesaModal = document.getElementById('mpesaPaymentModal');
-        if (mpesaModal) mpesaModal.style.display = 'none';
-    },
-
-    handleSTKPush(e) {
-        e.preventDefault();
-        // Show the loading state (waiting for user to enter PIN)
-        document.getElementById('mpesaMainContent').style.display = 'none';
-        document.getElementById('mpesaLoaderOverlay').style.display = 'flex';
-
-        const phone = document.getElementById('mpesaPhoneNumber').value;
-        console.log("Initiating STK Push for: ", phone);
-        
-        // Integration point: Call your backend API here
-    }
-};
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- M-Pesa Form Listener ---
     const mpesaForm = document.getElementById('mpesaPaymentForm');
-    if (mpesaForm) {
-        mpesaForm.addEventListener('submit', mpesaPaymentHandler.handleSTKPush);
+    if (mpesaForm && typeof mpesaPaymentHandler !== 'undefined') {
+        mpesaForm.addEventListener('submit', (e) => mpesaPaymentHandler.handlePaymentSubmit(e));
     }
 
     // --- Hamburger Menu ---
@@ -73,8 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Data Definitions ---
-    const internationalTrips = [ /* ... your international trip objects ... */ ];
-    const localTrips = [ /* ... your local trip objects ... */ ];
+    // (real trip arrays are defined further below)
 
     // --- Generic Render Function ---
     function renderTrips(tripsToRender, gridElement, noResultsElement, currencySymbol = '$') {
@@ -99,9 +60,94 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             gridElement.appendChild(tripCard);
-            tripCard.querySelector('.view-details-btn').addEventListener('click', () => openTripDetailsModal(trip, currencySymbol));
+            tripCard.querySelector('.view-details-btn').addEventListener('click', () => {
+                const bookingData = createBookingDataFromTrip(trip, currencySymbol);
+                openBookingConfirmationModal(bookingData);
+            });
         });
     }
+
+    // --- Booking Prompt Section ---
+    const bookingPromptSection = document.querySelector('.booking-prompt');
+    if (bookingPromptSection) {
+        bookingPromptSection.style.display = 'none';
+        // disable inputs while hidden to avoid browser validation on hidden controls
+        bookingPromptSection.querySelectorAll('input, select, textarea, button').forEach(el => el.disabled = true);
+    }
+
+    // --- Data Definitions ---
+    const internationalTrips = [
+        {
+            title: 'Paris Escape',
+            description: 'Enjoy 5 nights in Paris with the Eiffel Tower, Seine cruise, and local dining.',
+            price: 2299,
+            image: 'https://images.unsplash.com/photo-1522098543979-ffc7f79d3c0b?auto=format&fit=crop&w=900&q=80',
+            highlights: ['Eiffel Tower visit', 'Seine river cruise', 'Culinary walking tour'],
+            duration: '5 Days',
+            type: 'Romance',
+            currency: 'USD'
+        },
+        {
+            title: 'Safari Adventure',
+            description: '7-day Kenyan safari exploring Masai Mara with guided game drives and camp stays.',
+            price: 1899,
+            image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=900&q=80',
+            highlights: ['Big Five game drive', 'Cultural village visit', 'Luxury tented accommodation'],
+            duration: '7 Days',
+            type: 'Wildlife',
+            currency: 'USD'
+        },
+        {
+            title: 'Mediterranean Cruise',
+            description: '10-day cruise along the Mediterranean coast with island stops and entertainment.',
+            price: 2999,
+            image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',
+            highlights: ['Oceanfront cabin', 'Island excursions', 'Fine dining experiences'],
+            duration: '10 Days',
+            type: 'Luxury',
+            currency: 'USD'
+        }
+    ];
+
+    const localTrips = [
+        {
+            title: 'Maasai Mara Safari',
+            description: '3-day wildlife safari in Maasai Mara with morning and evening game drives.',
+            price: 75000,
+            image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
+            highlights: ['Three game drives', 'Traditional Maasai village tour', 'Luxury tented camp'],
+            duration: '3 Days',
+            type: 'Safari',
+            currency: 'KES'
+        },
+        {
+            title: 'Diani Beach Retreat',
+            description: '4-day coastal getaway with snorkeling, beach dinners, and ocean views.',
+            price: 54000,
+            image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',
+            highlights: ['Oceanfront resort', 'Snorkeling excursion', 'Sunset beach dinner'],
+            duration: '4 Days',
+            type: 'Beach',
+            currency: 'KES'
+        },
+        {
+            title: 'Mount Kenya Trek',
+            description: '5-day guided trek across Mount Kenya with stunning scenery and camping.',
+            price: 68000,
+            image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=900&q=80',
+            highlights: ['Guided mountain trek', 'Camping under the stars', 'Wildlife spotting'],
+            duration: '5 Days',
+            type: 'Mountain',
+            currency: 'KES'
+        }
+    ];
+
+    window.showBookingForm = function() {
+        const packageSection = document.getElementById('international-destinations');
+        if (packageSection) {
+            packageSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
     // --- Search & Initial Render ---
     renderTrips(internationalTrips, document.getElementById('international-trip-grid'), document.getElementById('no-international-results'), '$');
@@ -117,43 +163,146 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-let currentTripData = null;
-let currencySymbolForPayment = '$';
+let pendingBookingData = null;
 
-function openTripDetailsModal(trip, currencySymbol) {
-    currentTripData = trip;
-    currencySymbolForPayment = currencySymbol;
-
-    document.getElementById('modalTripImage').src = trip.image;
-    document.getElementById('modalTripTitle').textContent = trip.title;
-    document.getElementById('modalTripDescription').textContent = trip.description;
-    document.getElementById('modalTripPrice').textContent = `${currencySymbol}${trip.price.toLocaleString()}`;
-
-    document.getElementById('tripDetailsModal').style.display = 'block';
+function createBookingDataFromTrip(trip, currencySymbol) {
+    return {
+        bookingId: `booking_${Date.now()}`,
+        destinationName: trip.title,
+        basePrice: trip.price,
+        totalPrice: trip.price,
+        currency: trip.currency || (currencySymbol.trim() === '$' ? 'USD' : 'KES'),
+        numberOfTravelers: 1,
+        startDate: new Date().toLocaleDateString(),
+        endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString()
+    };
 }
 
-function closeTripDetailsModal() {
-    document.getElementById('tripDetailsModal').style.display = 'none';
-    currentTripData = null;
+function updateBookingTotal(bookingData) {
+    bookingData.numberOfTravelers = Math.max(1, Number(bookingData.numberOfTravelers) || 1);
+    bookingData.totalPrice = bookingData.basePrice * bookingData.numberOfTravelers;
+}
+
+function openBookingConfirmationModal(bookingData) {
+    pendingBookingData = bookingData;
+    updateBookingTotal(pendingBookingData);
+
+    document.getElementById('confirmDestination').textContent = bookingData.destinationName;
+    const travelersInput = document.getElementById('confirmTravelersInput');
+    if (travelersInput) {
+        travelersInput.value = bookingData.numberOfTravelers;
+    }
+    document.getElementById('confirmDates').textContent = `${bookingData.startDate} - ${bookingData.endDate}`;
+    document.getElementById('confirmAmount').textContent = formatCurrency(bookingData.totalPrice, bookingData.currency);
+
+    document.getElementById('bookingConfirmationModal').style.display = 'flex';
+}
+
+function closeBookingConfirmationModal() {
+    document.getElementById('bookingConfirmationModal').style.display = 'none';
+}
+
+function openReceiptModal(receiptData) {
+    document.getElementById('receiptBookingId').textContent = receiptData.bookingId;
+    document.getElementById('receiptDestination').textContent = receiptData.destinationName;
+    document.getElementById('receiptAmount').textContent = formatCurrency(receiptData.totalPrice, receiptData.currency);
+    document.getElementById('receiptDates').textContent = `${receiptData.startDate} - ${receiptData.endDate}`;
+    document.getElementById('receiptTransactionId').textContent = receiptData.transactionId || 'N/A';
+
+    document.getElementById('receiptModal').style.display = 'flex';
+}
+
+function closeReceiptModal() {
+    document.getElementById('receiptModal').style.display = 'none';
+    pendingBookingData = null;
+}
+
+function formatCurrency(amount, currency) {
+    if (!currency || currency.toUpperCase() === 'KES') return `KES ${Number(amount).toLocaleString()}`;
+    return `$${Number(amount).toLocaleString()}`;
 }
 
 // Global listeners for closing/paying
 document.addEventListener('DOMContentLoaded', () => {
-    const payButton = document.getElementById('modalPayButton');
-    if (payButton) {
-        payButton.addEventListener('click', () => {
-            if (currentTripData) {
-                const bookingData = {
-                    destinationName: currentTripData.title,
-                    totalPrice: currentTripData.price,
-                    currency: currencySymbolForPayment.trim(), // Remove extra spaces
-                    numberOfTravelers: 1,
-                    startDate: new Date().toLocaleDateString()
-                };
-
-                closeTripDetailsModal();
-                mpesaPaymentHandler.openPaymentModal(bookingData);
+    const confirmBookingButton = document.getElementById('confirmBookingButton');
+    if (confirmBookingButton) {
+        confirmBookingButton.addEventListener('click', () => {
+            if (!pendingBookingData) return;
+            closeBookingConfirmationModal();
+            try {
+                localStorage.setItem('pendingBookingData', JSON.stringify(pendingBookingData));
+                window.location.href = 'payment.html';
+            } catch (e) {
+                // fallback to modal if storage/navigation fails
+                if (typeof mpesaPaymentHandler !== 'undefined' && typeof mpesaPaymentHandler.openPaymentModal === 'function') {
+                    mpesaPaymentHandler.openPaymentModal(pendingBookingData);
+                }
             }
         });
     }
+
+
+    const confirmationModal = document.getElementById('bookingConfirmationModal');
+    if (confirmationModal) {
+        confirmationModal.addEventListener('click', (event) => {
+            if (event.target === confirmationModal) {
+                closeBookingConfirmationModal();
+            }
+        });
+    }
+
+    const travelersInput = document.getElementById('confirmTravelersInput');
+
+    function applyTravelerCountChange(value) {
+        if (!pendingBookingData) return;
+        pendingBookingData.numberOfTravelers = Math.max(1, Number(value) || 1);
+        updateBookingTotal(pendingBookingData);
+        document.getElementById('confirmAmount').textContent = formatCurrency(pendingBookingData.totalPrice, pendingBookingData.currency);
+        document.getElementById('confirmPerPerson').textContent = formatCurrency(pendingBookingData.basePrice, pendingBookingData.currency);
+        if (travelersInput) travelersInput.value = pendingBookingData.numberOfTravelers;
+    }
+
+    if (travelersInput) {
+        travelersInput.addEventListener('input', (event) => {
+            applyTravelerCountChange(event.target.value);
+        });
+    }
+
+    const receiptModal = document.getElementById('receiptModal');
+    if (receiptModal) {
+        receiptModal.addEventListener('click', (event) => {
+            if (event.target === receiptModal) {
+                closeReceiptModal();
+            }
+        });
+    }
+
+    const paymentTabs = document.querySelectorAll('.payment-method-tab');
+    const paymentPanels = document.querySelectorAll('.payment-method-panel');
+
+    function selectPaymentMethod(method) {
+        paymentTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.method === method));
+        paymentPanels.forEach(panel => panel.classList.toggle('active', panel.id === `${method}Panel`));
+        if (typeof mpesaPaymentHandler !== 'undefined' && typeof mpesaPaymentHandler.setPaymentMethod === 'function') {
+            mpesaPaymentHandler.setPaymentMethod(method);
+        }
+    }
+
+    paymentTabs.forEach(tab => {
+        tab.addEventListener('click', () => selectPaymentMethod(tab.dataset.method));
+    });
+
+    window.selectPaymentMethod = selectPaymentMethod;
+    selectPaymentMethod('mpesa');
 });
+
+window.closeBookingConfirmationModal = closeBookingConfirmationModal;
+window.closeReceiptModal = closeReceiptModal;
+window.onMpesaPaymentSuccess = function(paymentResult) {
+    mpesaPaymentHandler.closePaymentModal();
+    if (!pendingBookingData) return;
+    openReceiptModal({
+        ...pendingBookingData,
+        transactionId: paymentResult.transactionId || 'N/A'
+    });
+};

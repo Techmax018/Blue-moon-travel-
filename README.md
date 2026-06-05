@@ -61,3 +61,11 @@ Launch:
 Bash
 
 node server.js
+
+✨ Recent UI and payment improvements
+
+- Booking confirmation modal now lets users edit traveler count before payment.
+- Total price recalculates live as traveler count changes.
+- Payment flow now includes a polished standalone payment page with M-Pesa, Card, PayPal, and Bank Transfer methods.
+- Each payment method shows a dedicated confirmation panel and security notice.
+- Modal backdrop blur keeps the dialog sharp while dimming the page behind it.

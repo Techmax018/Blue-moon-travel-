@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Confirm Booking — BlueMoonJourneys</title>
+  <link rel="stylesheet" href="booking.css">
+</head>
+<body>
+  <main class="container" style="padding:40px 20px;max-width:720px;margin:0 auto;">
+    <h1>Confirm Your Booking</h1>
+    <div id="confirmSummary" style="margin-top:18px;border:1px solid #eee;padding:18px;border-radius:8px;background:#fff;">
+      <p><strong>Destination:</strong> <span id="cDestination">—</span></p>
+      <p><strong>Travelers:</strong> <span id="cTravelers">—</span></p>
+      <p><strong>Start Date:</strong> <span id="cStartDate">—</span></p>
+      <p><strong>Amount:</strong> <span id="cAmount">—</span></p>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:18px;">
+      <button id="proceedPay" class="btn btn-primary">Proceed to Payment</button>
+      <button id="editSelection" class="btn btn-secondary">Edit Selection</button>
+    </div>
+
+    <!-- Include M-Pesa modal HTML (kept minimal) -->
+    <div id="mpesaPaymentModal" class="modal" style="display:none">
+      <div class="modal-content">
+        <button class="close-btn" onclick="mpesaPaymentHandler.closePaymentModal()">&times;</button>
+        <div id="mpesaLoaderOverlay" class="payment-loader-overlay" style="display:none">
+          <div id="loaderContent"></div>
+        </div>
+        <div id="mpesaMainContent">
+          <div class="mpesa-header">
+            <h2>Secure Checkout</h2>
+          </div>
+          <div class="booking-summary">
+            <div class="summary-card">
+              <div class="summary-grid">
+                <div class="summary-item full">
+                  <label>Destination</label>
+                  <span id="mpesaSummaryDestination">--</span>
+                </div>
+                <div class="summary-item">
+                  <label>Travelers</label>
+                  <span id="mpesaSummaryTravelers">--</span>
+                </div>
+                <div class="summary-item">
+                  <label>Dates</label>
+                  <span id="mpesaSummaryDate">--</span>
+                </div>
+              </div>
+              <div class="total-row">
+                <label>Total Amount</label>
+                <span id="mpesaSummaryAmount" class="total-amount">KES 0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <form id="mpesaPaymentForm" class="form-area">
+            <div class="form-group">
+              <label for="mpesaPhoneNumber">M-Pesa Phone Number</label>
+              <div class="input-wrapper">
+                <input type="tel" id="mpesaPhoneNumber" name="mpesaPhoneNumber" placeholder="+254712345678" pattern="^(\+?254|0)[17]\d{8}$" required>
+              </div>
+            </div>
+            <button type="submit" id="mpesaSubmitButton" class="mpesa-btn">Pay Now <span id="mpesaPaymentAmount"></span></button>
+          </form>
+          <div id="mpesaPaymentStatus" class="payment-status" style="display:none;margin-top:16px;color:#d43d3d;font-weight:700;"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="api.js"></script>
+  <script src="mpesa.js"></script>
+  <script>
+    // Load booking data saved from booking page
+    const bookingDataRaw = sessionStorage.getItem('bm_bookingData');
+    let bookingData = null;
+    try { bookingData = bookingDataRaw ? JSON.parse(bookingDataRaw) : null; } catch(e) { console.error(e); }
+
+    function formatCurrency(amount, currency) {
+      if (!currency) return amount;
+      if (currency === 'USD') return '$' + Number(amount).toLocaleString();
+      return currency + ' ' + Number(amount).toLocaleString();
+    }
+
+    if (bookingData) {
+      document.getElementById('cDestination').textContent = bookingData.destinationName;
+      document.getElementById('cTravelers').textContent = bookingData.numberOfTravelers;
+      document.getElementById('cStartDate').textContent = bookingData.startDate;
+      document.getElementById('cAmount').textContent = formatCurrency(bookingData.totalPrice, bookingData.currency);
+
+      // populate mpesa modal summary
+      const amountString = formatCurrency(bookingData.totalPrice, bookingData.currency);
+      const mpesaAmountEl = document.getElementById('mpesaSummaryAmount');
+      if (mpesaAmountEl) mpesaAmountEl.textContent = amountString;
+      const btnAmount = document.getElementById('btnAmount');
+      if (btnAmount) btnAmount.textContent = amountString;
+    }
+
+    document.getElementById('proceedPay').addEventListener('click', () => {
+      if (!bookingData) return alert('No booking data found.');
+      // show mpesa modal and call handler to open with same bookingData
+      mpesaPaymentHandler.openPaymentModal(bookingData);
+      document.getElementById('mpesaPaymentModal').style.display = 'flex';
+    });
+
+    document.getElementById('editSelection').addEventListener('click', () => {
+      window.location.href = 'booking.html#international-destinations';
+    });
+  </script>
+</body>
+</html>

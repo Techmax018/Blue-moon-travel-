@@ -239,7 +239,7 @@ header .container {
     align-items: center;
     text-align: center;
     color: var(--white);
-    background: url('booking/background.jpg') no-repeat center center/cover;
+    background: url('assets/images/background.jpg') no-repeat center center/cover;
     padding: 0;
 }
 
@@ -599,13 +599,13 @@ footer .container {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     /* Header Container - now handling logo elements directly */
     header .container {
         display: flex; /* Still a flex container */
         justify-content: space-between; /* Pushes logo and hamburger apart */
         align-items: center;
-        flex-wrap: nowrap; /* CRUCIAL: Prevents logo and hamburger from wrapping */
+        flex-wrap: nowrap; /* Prevents logo and hamburger from wrapping */
         padding: 15px 20px;
     }
 

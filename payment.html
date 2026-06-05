@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Payment - BlueMoonJourneys</title>
+  <link rel="stylesheet" href="booking.css">
+  <link rel="stylesheet" href="payment.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <img src="assets/images/logo.png" alt="Logo" class="logo-img">
+      <button id="backToBooking" class="btn btn-secondary" style="margin-left:16px;">Back to Booking</button>
+    </div>
+  </header>
+
+  <main style="padding:0; min-height:100vh;">
+    <div id="paymentModal" class="modal" style="display:flex;">
+      <div class="modal-content" style="max-width:680px; width:100%; position:relative;">
+        <button id="closePaymentModal" class="modal-close-icon" aria-label="Close payment modal">&times;</button>
+        <div id="mpesaMainContent">
+          <div class="mpesa-header">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/M-PESA_LOGO-01.svg" alt="M-Pesa" class="mpesa-logo">
+            <h2>Secure Checkout</h2>
+          </div>
+
+          <div class="booking-summary">
+            <div class="summary-card">
+              <div class="summary-grid">
+                <div class="summary-item full">
+                  <label>Destination</label>
+                  <span id="mpesaSummaryDestination">--</span>
+                </div>
+                <div class="summary-item">
+                  <label>Travelers</label>
+                  <span id="mpesaSummaryTravelers">--</span>
+                </div>
+                <div class="summary-item">
+                  <label>Dates</label>
+                  <span id="mpesaSummaryDate">--</span>
+                </div>
+              </div>
+              <div class="total-row">
+                <label>Total Amount</label>
+                <span id="mpesaSummaryAmount" class="total-amount">KES 0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="payment-method-selector">
+            <button type="button" class="payment-method-tab active" data-method="mpesa">M-Pesa</button>
+            <button type="button" class="payment-method-tab" data-method="card">Card</button>
+            <button type="button" class="payment-method-tab" data-method="paypal">PayPal</button>
+            <button type="button" class="payment-method-tab" data-method="bank">Bank Transfer</button>
+          </div>
+
+          <form id="mpesaPaymentForm" class="form-area" novalidate>
+            <div class="payment-method-panel active" id="mpesaPanel">
+              <div class="panel-visual">
+                <div class="panel-title">M-Pesa</div>
+                <div class="panel-sub">Safaricom M-Pesa STK Push</div>
+              </div>
+              <div class="form-group">
+                <label for="mpesaPhoneNumber">M-Pesa Phone Number</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-phone"></i>
+                  <input type="tel" id="mpesaPhoneNumber" name="mpesaPhoneNumber" placeholder="+254712345678" pattern="^(\\+?254|0)[17]\\d{8}$">
+                </div>
+                <p class="input-hint">Ensure your phone is unlocked to receive the STK push prompt.</p>
+              </div>
+              <div class="security-badge">
+                <i class="fas fa-shield-halved"></i>
+                <span>Payments are securely processed via the Safaricom M-Pesa API. We do not store your PIN.</span>
+              </div>
+            </div>
+
+            <div class="payment-method-panel" id="cardPanel">
+              <div class="panel-visual">
+                <div class="panel-title">Card</div>
+                <div class="panel-sub">Visa, MasterCard — processed securely</div>
+              </div>
+              <div class="card-visual">
+                <div class="card-brand">VISA</div>
+                <div class="card-number">•••• •••• •••• 3456</div>
+              </div>
+              <div class="form-group">
+                <label for="cardholderName">Cardholder Name</label>
+                <input type="text" id="cardholderName" name="cardholderName" placeholder="Name on card">
+              </div>
+              <div class="form-group">
+                <label for="cardNumber">Card Number</label>
+                <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" class="card-number-input">
+              </div>
+              <div class="form-row card-row">
+                <div class="form-group half card-expiry">
+                  <label for="cardExpiry">Expiry Date</label>
+                  <input type="text" id="cardExpiry" name="cardExpiry" placeholder="MM/YY">
+                </div>
+                <div class="form-group half card-cvv">
+                  <label for="cardCvv">CVV</label>
+                  <input type="text" id="cardCvv" name="cardCvv" placeholder="123">
+                </div>
+              </div>
+              <div class="card-note">Your card details are securely transmitted and not stored on our servers.</div>
+              <div class="security-badge">
+                <i class="fas fa-shield-halved"></i>
+                <span>Card payments are processed through a PCI-compliant gateway (simulated).</span>
+              </div>
+            </div>
+
+            <div class="payment-method-panel" id="paypalPanel">
+              <div class="panel-visual">
+                <div class="panel-title">PayPal</div>
+                <div class="panel-sub">Fast PayPal checkout</div>
+              </div>
+              <div class="form-group">
+                <label for="paypalEmail">PayPal Email</label>
+                <input type="email" id="paypalEmail" name="paypalEmail" placeholder="you@example.com">
+              </div>
+              <div class="security-badge">
+                <i class="fas fa-shield-halved"></i>
+                <span>PayPal payments are processed by PayPal. We'll redirect you to complete payment.</span>
+              </div>
+            </div>
+
+            <div class="payment-method-panel" id="bankPanel">
+              <div class="panel-visual">
+                <div class="panel-title">Bank Transfer</div>
+                <div class="panel-sub">Manual bank transfer instructions</div>
+              </div>
+              <div class="form-group">
+                <label for="bankName">Bank Name</label>
+                <input type="text" id="bankName" name="bankName" placeholder="Your bank name">
+              </div>
+              <div class="form-group">
+                <label for="accountName">Account Name</label>
+                <input type="text" id="accountName" name="accountName" placeholder="Account holder name">
+              </div>
+              <div class="form-group">
+                <label for="accountNumber">Account Number</label>
+                <input type="text" id="accountNumber" name="accountNumber" placeholder="0123456789">
+              </div>
+              <div class="security-badge">
+                <i class="fas fa-shield-halved"></i>
+                <span>Use bank transfer instructions to complete payment. Confirm via email or reference code.</span>
+              </div>
+            </div>
+
+            <button type="submit" id="mpesaSubmitButton" class="mpesa-btn">
+              <i class="fas fa-lock"></i>
+              <span>Pay <span id="btnAmount">KES 0.00</span></span>
+            </button>
+          </form>
+
+          <div id="mpesaPaymentStatus" class="payment-status" style="display:none;margin-top:16px;color:#d43d3d;font-weight:700;"></div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="mpesa.js"></script>
+  <script src="payment.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const raw = localStorage.getItem('pendingBookingData');
+      if (!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        const dest = document.getElementById('mpesaSummaryDestination'); if (dest) dest.textContent = data.destinationName || '--';
+        const trav = document.getElementById('mpesaSummaryTravelers'); if (trav) trav.textContent = data.numberOfTravelers || 1;
+        const dates = document.getElementById('mpesaSummaryDate'); if (dates) dates.textContent = `${data.startDate} - ${data.endDate}`;
+        const formatted = (typeof formatCurrency === 'function') ? formatCurrency(data.totalPrice, data.currency) : (`KES ${data.totalPrice}`);
+        const btn = document.getElementById('btnAmount'); if (btn) btn.textContent = formatted;
+        const amt = document.getElementById('mpesaSummaryAmount'); if (amt) amt.textContent = formatted;
+        if (typeof mpesaPaymentHandler !== 'undefined') {
+          mpesaPaymentHandler.currentBookingData = data;
+        }
+
+        // Attach submit to handler if available
+        const form = document.getElementById('mpesaPaymentForm');
+        if (form && typeof mpesaPaymentHandler !== 'undefined') {
+          form.addEventListener('submit', (e) => mpesaPaymentHandler.handlePaymentSubmit(e));
+        }
+
+        // Tab switching
+        document.querySelectorAll('.payment-method-tab').forEach(tab => {
+          tab.addEventListener('click', () => {
+            const method = tab.dataset.method;
+            document.querySelectorAll('.payment-method-tab').forEach(t => t.classList.toggle('active', t === tab));
+            document.querySelectorAll('.payment-method-panel').forEach(p => p.classList.toggle('active', p.id === `${method}Panel`));
+            if (typeof mpesaPaymentHandler !== 'undefined') mpesaPaymentHandler.setPaymentMethod(method);
+          });
+        });
+
+      } catch (e) {
+        console.error('Failed to parse pending booking data', e);
+      }
+
+      // Back button clears pending booking and returns to booking page
+      const backBtn = document.getElementById('backToBooking');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          try { localStorage.removeItem('pendingBookingData'); } catch (e) {}
+          window.location.href = 'booking.html';
+        });
+      }
+
+      // When payment succeeds, clear pending booking and redirect back to booking page
+      window.onMpesaPaymentSuccess = function(result) {
+        try { localStorage.removeItem('pendingBookingData'); } catch (e) {}
+        // Optionally show a receipt; for now return to booking list
+        window.location.href = 'booking.html';
+      };
+
+    });
+  </script>
+</body>
+</html>
